@@ -31,7 +31,7 @@ public class InputActionsManager : MonoBehaviour
         elephantController = Elephant.GetComponent<CharacterController>();
         humanController = Human.GetComponent<CharacterController>();
         InputActions.Player.SetCallbacks(humanController);
-        camera.SetTartet(Human);
+        camera.SetTarget(Human, TARGET_TYPE.HUMAN);
     }
 
     public void SwitchCharacter()
@@ -40,12 +40,12 @@ public class InputActionsManager : MonoBehaviour
         if (isElephantActive)
         {
             InputActions.Player.SetCallbacks(elephantController);
-            camera.SetTartet(Elephant);
+            camera.SetTarget(Elephant, TARGET_TYPE.ELEPHANT);
         }
         else
         {
             InputActions.Player.SetCallbacks(humanController);
-            camera.SetTartet(Human);
+            camera.SetTarget(Human, TARGET_TYPE.HUMAN);
         }
     }
 }

@@ -536,6 +536,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraAdjust
   PositionOffset: {x: 0, y: 6, z: -7}
   Rotation: {x: 45, y: 0, z: 0}
+  humanFOV: 60
+  elephantFOV: 90
 --- !u!1 &363401818
 GameObject:
   m_ObjectHideFlags: 0
