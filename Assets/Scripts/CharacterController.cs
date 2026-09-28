@@ -1,3 +1,4 @@
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,7 +7,7 @@ public class CharacterController : MonoBehaviour, InputSystem_Actions.IPlayerAct
 {
     public float MovementSpeed = 5f;
     private Rigidbody rb;
-    private Vector3 movement;
+
     public void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -29,6 +30,7 @@ public class CharacterController : MonoBehaviour, InputSystem_Actions.IPlayerAct
 
     public void OnSwitch(InputAction.CallbackContext context)
     {
+        rb.linearVelocity = Vector3.zero; // Stop movement when switching characters
         InputActionsManager.Instance.SwitchCharacter();
     }
 
@@ -40,7 +42,7 @@ public class CharacterController : MonoBehaviour, InputSystem_Actions.IPlayerAct
     public void OnMove(InputAction.CallbackContext context)
     {
         Vector2 movementInput = context.ReadValue<Vector2>();
-        movement = new Vector3(movementInput.x, 0, movementInput.y) * MovementSpeed;
+        InputActionsManager.Instance.MovementInput = new Vector3(movementInput.x, 0, movementInput.y) * MovementSpeed;
         
     }
 
@@ -63,6 +65,6 @@ public class CharacterController : MonoBehaviour, InputSystem_Actions.IPlayerAct
 
     private void FixedUpdate()
     {
-        rb.linearVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
+        rb.linearVelocity = new Vector3(InputActionsManager.Instance.MovementInput.x, rb.linearVelocity.y, InputActionsManager.Instance.MovementInput.z);
     }
 }

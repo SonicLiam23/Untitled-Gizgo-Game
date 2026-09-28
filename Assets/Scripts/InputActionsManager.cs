@@ -11,7 +11,7 @@ public class InputActionsManager : MonoBehaviour
     private CharacterController humanController;
     public InputSystem_Actions InputActions { get; private set; }
     private bool isElephantActive = false;
-
+    public Vector3 MovementInput;
 
     private void Awake()
     {
@@ -30,6 +30,8 @@ public class InputActionsManager : MonoBehaviour
     {
         elephantController = Elephant.GetComponent<CharacterController>();
         humanController = Human.GetComponent<CharacterController>();
+        elephantController.enabled = false;
+        humanController.enabled = true;
         InputActions.Player.SetCallbacks(humanController);
         camera.SetTarget(Human, TARGET_TYPE.HUMAN);
     }
@@ -39,11 +41,17 @@ public class InputActionsManager : MonoBehaviour
         isElephantActive = !isElephantActive;
         if (isElephantActive)
         {
+            humanController.enabled = false;
+            elephantController.enabled = true;
+
             InputActions.Player.SetCallbacks(elephantController);
             camera.SetTarget(Elephant, TARGET_TYPE.ELEPHANT);
         }
         else
         {
+            humanController.enabled = true;
+            elephantController.enabled = false;
+
             InputActions.Player.SetCallbacks(humanController);
             camera.SetTarget(Human, TARGET_TYPE.HUMAN);
         }
