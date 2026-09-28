@@ -40,7 +40,7 @@ public class InputActionsManager : MonoBehaviour
         if (isElephantActive)
         {
             InputActions.Player.SetCallbacks(elephantController);
-            camera.SetTarget(Elephant, TARGET_TYPE.HUMAN);
+            camera.SetTarget(Elephant, TARGET_TYPE.ELEPHANT);
         }
         else
         {
