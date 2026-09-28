@@ -13,17 +13,21 @@ public class CameraAdjust : MonoBehaviour
     public Vector3 PositionOffset;
     public Vector3 Rotation;
     private GameObject Target;
+    [Range(30f, 120f)]
+    public float humanFOV = 60f;
+    [Range(30f, 120f)]
+    public float elephantFOV = 90f;
 
     public void SetTarget(GameObject newTarget, TARGET_TYPE type)
     {
         Target = newTarget;
         if (type == TARGET_TYPE.HUMAN)
         {
-            Camera.main.fieldOfView = 60f;
+            Camera.main.fieldOfView = humanFOV;
         }
         else if (type == TARGET_TYPE.ELEPHANT)
         {
-            Camera.main.fieldOfView = 90f;
+            Camera.main.fieldOfView = elephantFOV;
         }
         else
         {
