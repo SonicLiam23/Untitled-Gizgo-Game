@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public CurrentCharacter ActiveCharacter { get; private set; } = new();
 
     private Dictionary<CHARACTER, CharacterStats> CharacterStat;
-    
+
     public UnityEngine.UI.Slider temperatureSlider;
     public UnityEngine.UI.Slider hungerSlider;
     private Dictionary<CHARACTER, float> characterTemp;
@@ -27,6 +27,11 @@ public class GameManager : MonoBehaviour
 
     public GameObject Elephant => CharacterObject[(int)CHARACTER.ELEPHANT];
     public GameObject Human => CharacterObject[(int)CHARACTER.HUMAN];
+
+    private float humanElephantDistance;
+
+    public bool isCampfireActive;
+  
 
 
 
@@ -59,7 +64,34 @@ public class GameManager : MonoBehaviour
         ActiveCharacter.gameObject = Human;
 
 
-        StartCoroutine(TimerCoroutine());
+        StartCoroutine(HungerCoroutine());
+        StartCoroutine(TempCoroutine());
+    }
+
+    private void Update()
+    {
+        humanElephantDistance = Vector3.Distance(Human.transform.position, Elephant.transform.position);
+    }
+
+    private void FixedUpdate()
+    {
+        if (ActiveCharacter.type == CHARACTER.HUMAN)
+        {
+            temperatureSlider.maxValue = CharacterStat[CHARACTER.HUMAN].MaxTemperature;
+            hungerSlider.maxValue = CharacterStat[CHARACTER.HUMAN].MaxHunger;
+
+            temperatureSlider.value = characterTemp[CHARACTER.HUMAN];
+            hungerSlider.value = characterHunger[CHARACTER.HUMAN];
+        }
+
+        else
+        {
+            temperatureSlider.maxValue = CharacterStat[CHARACTER.ELEPHANT].MaxTemperature;
+            hungerSlider.maxValue = CharacterStat[CHARACTER.ELEPHANT].MaxHunger;
+
+            temperatureSlider.value = characterTemp[CHARACTER.ELEPHANT];
+            hungerSlider.value = characterHunger[CHARACTER.ELEPHANT];
+        }
     }
 
     public void OnSwitch()
@@ -77,33 +109,61 @@ public class GameManager : MonoBehaviour
         InputActionsManager.Instance.SwitchCharacter(ActiveCharacter);
     }
 
-    IEnumerator TimerCoroutine()
+    IEnumerator HungerCoroutine()
     {
         while (true)
         {
+
             yield return new WaitForSeconds(3f);
             if (ActiveCharacter.type == CHARACTER.HUMAN)
             {
-                temperatureSlider.maxValue = CharacterStat[CHARACTER.HUMAN].MaxTemperature;
-                hungerSlider.maxValue = CharacterStat[CHARACTER.HUMAN].MaxHunger;
-
-                temperatureSlider.value = characterTemp[CHARACTER.HUMAN];
-                hungerSlider.value = characterHunger[CHARACTER.HUMAN];
-
-                --characterTemp[CHARACTER.HUMAN];
                 --characterHunger[CHARACTER.HUMAN];
             }
-
             else
             {
-                temperatureSlider.maxValue = CharacterStat[CHARACTER.ELEPHANT].MaxTemperature;
-                hungerSlider.maxValue = CharacterStat[CHARACTER.ELEPHANT].MaxHunger;
-
-                temperatureSlider.value = characterTemp[CHARACTER.ELEPHANT];
-                hungerSlider.value = characterHunger[CHARACTER.ELEPHANT];
-
-                --characterTemp[CHARACTER.ELEPHANT];
                 --characterHunger[CHARACTER.ELEPHANT];
+            }
+        }
+    }
+
+    IEnumerator TempCoroutine()
+    {
+        while (true)
+        {
+            float waitingTime = 3f;
+
+            if (ActiveCharacter.type == CHARACTER.HUMAN && humanElephantDistance <= 5f)
+            {
+                waitingTime = 5f;
+            }
+
+            if(isCampfireActive)
+            {
+                waitingTime = 2f;
+            }
+
+            yield return new WaitForSeconds(waitingTime);
+
+            if(isCampfireActive)
+            {
+                if(characterTemp[CHARACTER.HUMAN] <= CharacterStat[CHARACTER.HUMAN].MaxTemperature)
+                {
+                    characterTemp[CHARACTER.HUMAN] += 2;
+                }
+
+                if(characterTemp[CHARACTER.ELEPHANT] <= CharacterStat[CHARACTER.ELEPHANT].MaxTemperature)
+                {
+                    characterTemp[CHARACTER.ELEPHANT] += 2;
+                }
+
+            }
+            else if (ActiveCharacter.type == CHARACTER.HUMAN)
+            {
+                --characterTemp[CHARACTER.HUMAN];
+            }
+            else
+            {
+                --characterTemp[CHARACTER.ELEPHANT];
             }
         }
     }
