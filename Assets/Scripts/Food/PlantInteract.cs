@@ -1,0 +1,29 @@
+using UnityEngine;
+
+public class PlantInteract : MonoBehaviour, IInteractable
+{
+    public GameObject OnEnterRadius(Collider other)
+    {
+        Debug.Log("Entered Plant Radius");
+        return other.gameObject;
+    }
+
+    public GameObject OnExitRadius(Collider other)
+    {
+        Debug.Log("exited Plant Radius");
+        return other.gameObject;
+    }
+
+    public void OnInteract(GameObject interacter)
+    {
+        if (GameManager.Instance.ActiveCharacter.type == CHARACTER.ELEPHANT)
+        {
+            Debug.Log("Elephant ate the plant!");
+            Destroy(gameObject);
+        }
+        else
+        {
+            Debug.Log("You must be an elephant to eat this");
+        }
+    }
+}

@@ -1,27 +1,33 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
+
+public enum CHARACTER
+{
+    HUMAN = 0,
+    ELEPHANT = 1,
+    NONE = -1
+}
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; } = null;
 
-    public GameObject Elephant;
-    public GameObject Human;
-    private CharacterStats elephantStats;
-    private CharacterStats humanStats;
-    private CharacterController elephantController;
-    private CharacterController humanController;
+    [Header("MUST BE HUMAN AT INDEX 0 THEN ELEPHANT AT INDEX 1")]
+    public GameObject[] CharacterObject;
+    public CurrentCharacter ActiveCharacter { get; private set; } = new();
+
+    private Dictionary<CHARACTER, CharacterStats> CharacterStat;
+    
     public UnityEngine.UI.Slider temperatureSlider;
     public UnityEngine.UI.Slider hungerSlider;
+    private Dictionary<CHARACTER, float> characterTemp;
+    private Dictionary<CHARACTER, float> characterHunger;
 
-    private float elephantCurrentTemp;
-    private float elephantCurrentHunger;
-    private float humanCurrentTemp;
-    private float humanCurrentHunger;
+    public GameObject Elephant => CharacterObject[(int)CHARACTER.ELEPHANT];
+    public GameObject Human => CharacterObject[(int)CHARACTER.HUMAN];
+
 
 
     private void Awake()
@@ -33,56 +39,71 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
+        CharacterStat = new();
+        characterTemp = new();
+        characterHunger = new();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        elephantController = Elephant.GetComponent<CharacterController>();
-        humanController = Human.GetComponent<CharacterController>();
-        elephantStats = Elephant.GetComponent<CharacterStats>();
-        humanStats = Human.GetComponent<CharacterStats>();
 
-        humanCurrentTemp = humanStats.MaxTemperature;
-        humanCurrentHunger = humanStats.MaxHunger;
-        elephantCurrentTemp = elephantStats.MaxTemperature;
-        elephantCurrentHunger = elephantStats.MaxHunger;
+        CharacterStat[CHARACTER.ELEPHANT] = Elephant.GetComponent<CharacterStats>();
+        CharacterStat[CHARACTER.HUMAN] = Human.GetComponent<CharacterStats>();
+
+        characterTemp[CHARACTER.HUMAN] = CharacterStat[CHARACTER.HUMAN].MaxTemperature;
+        characterHunger[CHARACTER.HUMAN] = CharacterStat[CHARACTER.HUMAN].MaxHunger;
+        characterTemp[CHARACTER.ELEPHANT] = CharacterStat[CHARACTER.ELEPHANT].MaxTemperature;
+        characterHunger[CHARACTER.ELEPHANT] = CharacterStat[CHARACTER.ELEPHANT].MaxHunger;
+
+        ActiveCharacter.type = CHARACTER.HUMAN;
+        ActiveCharacter.gameObject = Human;
+
+
         StartCoroutine(TimerCoroutine());
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnSwitch()
     {
-
+        if (ActiveCharacter.type == CHARACTER.HUMAN)
+        {
+            ActiveCharacter.type = CHARACTER.ELEPHANT;
+            ActiveCharacter.gameObject = Elephant;
+        }
+        else
+        {
+            ActiveCharacter.type = CHARACTER.HUMAN;
+            ActiveCharacter.gameObject = Human;
+        }
+        InputActionsManager.Instance.SwitchCharacter(ActiveCharacter);
     }
-
 
     IEnumerator TimerCoroutine()
     {
         while (true)
         {
             yield return new WaitForSeconds(3f);
-            if(humanController.enabled)
+            if (ActiveCharacter.type == CHARACTER.HUMAN)
             {
-                temperatureSlider.maxValue = humanStats.MaxTemperature;
-                hungerSlider.maxValue = humanStats.MaxHunger;
+                temperatureSlider.maxValue = CharacterStat[CHARACTER.HUMAN].MaxTemperature;
+                hungerSlider.maxValue = CharacterStat[CHARACTER.HUMAN].MaxHunger;
 
-                temperatureSlider.value = humanCurrentTemp;
-                hungerSlider.value = humanCurrentHunger;
+                temperatureSlider.value = characterTemp[CHARACTER.HUMAN];
+                hungerSlider.value = characterHunger[CHARACTER.HUMAN];
 
-                --humanCurrentTemp;
-                --humanCurrentHunger;
+                --characterTemp[CHARACTER.HUMAN];
+                --characterHunger[CHARACTER.HUMAN];
             }
 
-            if(elephantController.enabled)
+            else
             {
-                temperatureSlider.maxValue = elephantStats.MaxTemperature;
-                hungerSlider.maxValue = elephantStats.MaxHunger;
+                temperatureSlider.maxValue = CharacterStat[CHARACTER.ELEPHANT].MaxTemperature;
+                hungerSlider.maxValue = CharacterStat[CHARACTER.ELEPHANT].MaxHunger;
 
-                temperatureSlider.value = elephantCurrentTemp;
-                hungerSlider.value = elephantCurrentHunger;
+                temperatureSlider.value = characterTemp[CHARACTER.ELEPHANT];
+                hungerSlider.value = characterHunger[CHARACTER.ELEPHANT];
 
-                --elephantCurrentTemp;
-                --elephantCurrentHunger;
+                --characterTemp[CHARACTER.ELEPHANT];
+                --characterHunger[CHARACTER.ELEPHANT];
             }
         }
     }
