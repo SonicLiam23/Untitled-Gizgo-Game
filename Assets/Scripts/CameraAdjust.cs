@@ -30,6 +30,14 @@ public class CameraAdjust : MonoBehaviour
             Camera.main.fieldOfView = 60f;
         }
     }
+
+
+    public void SetTarget(CurrentCharacter character)
+    {
+        SetTarget(character.gameObject, character.type);
+    }
+
+
     private void Update()
     {
         transform.position = Target.transform.position + PositionOffset;

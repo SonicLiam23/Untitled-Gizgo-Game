@@ -8,9 +8,12 @@ public class CharacterController : MonoBehaviour, InputSystem_Actions.IPlayerAct
     public float MovementSpeed = 5f;
     private Rigidbody rb;
 
+    CharacterCore characterCore;
+
     public void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        characterCore = GetComponent<CharacterCore>();
     }
 
     public void OnAttack(InputAction.CallbackContext context)
@@ -25,13 +28,17 @@ public class CharacterController : MonoBehaviour, InputSystem_Actions.IPlayerAct
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        
+        if (context.started)
+        {
+            if (characterCore?.currentInteractables.Count > 0)
+                characterCore?.currentInteractables[0].OnInteract(gameObject);
+        }
     }
 
     public void OnSwitch(InputAction.CallbackContext context)
     {
         rb.linearVelocity = Vector3.zero; // Stop movement when switching characters
-        InputActionsManager.Instance.SwitchCharacter();
+        GameManager.Instance.OnSwitch();
     }
 
     public void OnLook(InputAction.CallbackContext context)

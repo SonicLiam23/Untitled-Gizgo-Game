@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    public abstract void OnInteract();
-    public abstract GameObject OnEnterRadius();
-    public abstract GameObject OnExitRadius();
+    public abstract void OnInteract(GameObject interacter);
+    public abstract GameObject OnEnterRadius(Collider other);
+    public abstract GameObject OnExitRadius(Collider other);
 }

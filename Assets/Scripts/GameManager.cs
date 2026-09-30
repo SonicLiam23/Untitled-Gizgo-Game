@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     [Header("MUST BE HUMAN AT INDEX 0 THEN ELEPHANT AT INDEX 1")]
     public GameObject[] CharacterObject;
-    public GameObject ActiveCharacter { get; private set; }
+    public CurrentCharacter ActiveCharacter { get; private set; } = new();
 
     private Dictionary<CHARACTER, CharacterStats> CharacterStat;
     
@@ -54,17 +54,35 @@ public class GameManager : MonoBehaviour
         characterHunger[CHARACTER.HUMAN] = CharacterStat[CHARACTER.HUMAN].MaxHunger;
         characterTemp[CHARACTER.ELEPHANT] = CharacterStat[CHARACTER.ELEPHANT].MaxTemperature;
         characterHunger[CHARACTER.ELEPHANT] = CharacterStat[CHARACTER.ELEPHANT].MaxHunger;
+
+        ActiveCharacter.type = CHARACTER.HUMAN;
+        ActiveCharacter.gameObject = Human;
+
+
         StartCoroutine(TimerCoroutine());
     }
 
-
+    public void OnSwitch()
+    {
+        if (ActiveCharacter.type == CHARACTER.HUMAN)
+        {
+            ActiveCharacter.type = CHARACTER.ELEPHANT;
+            ActiveCharacter.gameObject = Elephant;
+        }
+        else
+        {
+            ActiveCharacter.type = CHARACTER.HUMAN;
+            ActiveCharacter.gameObject = Human;
+        }
+        InputActionsManager.Instance.SwitchCharacter(ActiveCharacter);
+    }
 
     IEnumerator TimerCoroutine()
     {
         while (true)
         {
             yield return new WaitForSeconds(3f);
-            if(CharacterController[CHARACTER.HUMAN].enabled)
+            if (ActiveCharacter.type == CHARACTER.HUMAN)
             {
                 temperatureSlider.maxValue = CharacterStat[CHARACTER.HUMAN].MaxTemperature;
                 hungerSlider.maxValue = CharacterStat[CHARACTER.HUMAN].MaxHunger;
@@ -76,7 +94,7 @@ public class GameManager : MonoBehaviour
                 --characterHunger[CHARACTER.HUMAN];
             }
 
-            if(CharacterController[CHARACTER.ELEPHANT].enabled)
+            else
             {
                 temperatureSlider.maxValue = CharacterStat[CHARACTER.ELEPHANT].MaxTemperature;
                 hungerSlider.maxValue = CharacterStat[CHARACTER.ELEPHANT].MaxHunger;

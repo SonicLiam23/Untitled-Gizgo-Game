@@ -365,8 +365,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputActionsManager
   camera: {fileID: 330585548}
-  Elephant: {fileID: 363401818}
-  Human: {fileID: 267178450}
   MovementInput: {x: 0, y: 0, z: 0}
 --- !u!4 &266886586
 Transform:
@@ -396,6 +394,7 @@ GameObject:
   - component: {fileID: 267178453}
   - component: {fileID: 267178452}
   - component: {fileID: 267178451}
+  - component: {fileID: 267178458}
   - component: {fileID: 267178456}
   - component: {fileID: 267178457}
   m_Layer: 0
@@ -554,6 +553,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
   MaxTemperature: 10
   MaxHunger: 10
+--- !u!114 &267178458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 267178450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22a4e403e36a06745940c4e542b63cdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterCore
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -721,6 +732,7 @@ GameObject:
   - component: {fileID: 363401820}
   - component: {fileID: 363401819}
   - component: {fileID: 363401824}
+  - component: {fileID: 363401826}
   - component: {fileID: 363401823}
   - component: {fileID: 363401825}
   m_Layer: 0
@@ -877,6 +889,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
   MaxTemperature: 50
   MaxHunger: 50
+--- !u!114 &363401826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363401818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22a4e403e36a06745940c4e542b63cdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterCore
 --- !u!1 &379589803
 GameObject:
   m_ObjectHideFlags: 0
@@ -1123,8 +1147,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39bc854c9a5b2048b5d786218d3252f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  Elephant: {fileID: 363401818}
-  Human: {fileID: 267178450}
+  CharacterObject:
+  - {fileID: 267178450}
+  - {fileID: 363401818}
   temperatureSlider: {fileID: 1530024549}
   hungerSlider: {fileID: 379589805}
 --- !u!4 &522882068
@@ -1397,6 +1422,10 @@ PrefabInstance:
     - target: {fileID: 4385457738856253106, guid: 4ec5db6dc51758241a0ccca07016539d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5867151534930889652, guid: 4ec5db6dc51758241a0ccca07016539d, type: 3}
+      propertyPath: m_Radius
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8084768821714534550, guid: 4ec5db6dc51758241a0ccca07016539d, type: 3}
       propertyPath: m_Name
@@ -2347,9 +2376,9 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 267178455}
   - {fileID: 363401822}
-  - {fileID: 266886586}
   - {fileID: 330585546}
   - {fileID: 1507493111}
   - {fileID: 1345424472}
   - {fileID: 195368292}
   - {fileID: 522882068}
+  - {fileID: 266886586}
