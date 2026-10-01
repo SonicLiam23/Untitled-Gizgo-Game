@@ -18,7 +18,7 @@ public class MeatInteract : MonoBehaviour, IInteractable
     {
         if (GameManager.Instance.ActiveCharacter.type == CHARACTER.HUMAN)
         {
-            Debug.Log("Human ate the meat!");
+            GameManager.Instance.RestoreHunger(5f);
             Destroy(gameObject);
         }
         else

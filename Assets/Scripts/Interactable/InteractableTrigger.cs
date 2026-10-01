@@ -7,7 +7,6 @@ using UnityEngine;
 public class InteractableTrigger : MonoBehaviour
 {
     private IInteractable interactable;
-    private bool isCollidingWithPlayer = false;
     List<CharacterCore> currentCharactersColliding;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActions
 {
     public float MovementSpeed = 5f;
-    private Rigidbody rb;
+    protected Rigidbody rb;
 
     CharacterCore characterCore;
 
@@ -31,7 +31,12 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
         if (context.started)
         {
             if (characterCore?.currentInteractables.Count > 0)
-                characterCore?.currentInteractables[0].OnInteract(gameObject);
+            {
+                foreach (IInteractable i in characterCore.currentInteractables)
+                {
+                    i.OnInteract(gameObject);
+                }
+            }
         }
     }
 
@@ -46,7 +51,7 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
         
     }
 
-    public void OnMove(InputAction.CallbackContext context)
+    public virtual void OnMove(InputAction.CallbackContext context)
     {
         Vector2 movementInput = context.ReadValue<Vector2>();
         InputActionsManager.Instance.MovementInput = new Vector3(movementInput.x, 0, movementInput.y) * MovementSpeed;
@@ -70,7 +75,7 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
 
 
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         rb.linearVelocity = new Vector3(InputActionsManager.Instance.MovementInput.x, rb.linearVelocity.y, InputActionsManager.Instance.MovementInput.z);
     }
