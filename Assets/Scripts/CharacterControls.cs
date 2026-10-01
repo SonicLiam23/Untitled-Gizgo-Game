@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
-public class CharacterController : MonoBehaviour, InputSystem_Actions.IPlayerActions
+public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActions
 {
     public float MovementSpeed = 5f;
     private Rigidbody rb;

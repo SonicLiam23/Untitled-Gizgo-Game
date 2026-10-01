@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8211656007992493642}
   - component: {fileID: 5867151534930889652}
   - component: {fileID: -3098632911300961360}
+  - component: {fileID: -5627952409668386907}
   m_Layer: 0
   m_Name: Meat
   m_TagString: Untagged
@@ -147,3 +148,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44c43dd1a92c4849a85a98c7aec90c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractableTrigger
+--- !u!114 &-5627952409668386907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8084768821714534550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 531cfbc81eb779948b2f72e6d7408bc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeatInteract

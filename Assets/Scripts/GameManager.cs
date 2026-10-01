@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     public GameObject Elephant => CharacterObject[(int)CHARACTER.ELEPHANT];
     public GameObject Human => CharacterObject[(int)CHARACTER.HUMAN];
 
-
+    [SerializeField] private CameraAdjust camera;
 
     private void Awake()
     {
@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour
         ActiveCharacter.type = CHARACTER.HUMAN;
         ActiveCharacter.gameObject = Human;
 
+        camera.SetTarget(ActiveCharacter);
 
         StartCoroutine(TimerCoroutine());
     }
@@ -75,6 +76,7 @@ public class GameManager : MonoBehaviour
             ActiveCharacter.gameObject = Human;
         }
         InputActionsManager.Instance.SwitchCharacter(ActiveCharacter);
+        camera.SetTarget(ActiveCharacter);
     }
 
     IEnumerator TimerCoroutine()
