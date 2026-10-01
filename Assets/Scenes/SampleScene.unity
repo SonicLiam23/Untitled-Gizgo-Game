@@ -364,7 +364,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae355667f94fc9d4a8ef3752cacfe900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputActionsManager
-  camera: {fileID: 330585548}
   MovementInput: {x: 0, y: 0, z: 0}
 --- !u!4 &266886586
 Transform:
@@ -395,8 +394,8 @@ GameObject:
   - component: {fileID: 267178452}
   - component: {fileID: 267178451}
   - component: {fileID: 267178458}
-  - component: {fileID: 267178456}
   - component: {fileID: 267178457}
+  - component: {fileID: 267178459}
   m_Layer: 0
   m_Name: Human
   m_TagString: Untagged
@@ -526,19 +525,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &267178456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 267178450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d858e07df24ef04fa773aae3acfd310, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterController
-  MovementSpeed: 5
 --- !u!114 &267178457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -551,8 +537,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a739466a0cd3204ab34750ed7cb205f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
-  MaxTemperature: 20
-  MaxHunger: 20
+  MaxTemperature: 10
+  MaxHunger: 10
 --- !u!114 &267178458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,6 +551,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a4e403e36a06745940c4e542b63cdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterCore
+--- !u!114 &267178459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 267178450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b919a6df412fca44d97e7dfc58be55e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterControls
+  MovementSpeed: 5
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -733,8 +732,8 @@ GameObject:
   - component: {fileID: 363401819}
   - component: {fileID: 363401824}
   - component: {fileID: 363401826}
-  - component: {fileID: 363401823}
   - component: {fileID: 363401825}
+  - component: {fileID: 363401827}
   m_Layer: 0
   m_Name: Elephant
   m_TagString: Untagged
@@ -835,19 +834,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -45, z: 0}
---- !u!114 &363401823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 363401818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d858e07df24ef04fa773aae3acfd310, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterController
-  MovementSpeed: 5
 --- !u!54 &363401824
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -901,6 +887,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a4e403e36a06745940c4e542b63cdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterCore
+--- !u!114 &363401827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363401818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b919a6df412fca44d97e7dfc58be55e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterControls
+  MovementSpeed: 5
 --- !u!1 &379589803
 GameObject:
   m_ObjectHideFlags: 0
@@ -1152,7 +1151,7 @@ MonoBehaviour:
   - {fileID: 363401818}
   temperatureSlider: {fileID: 1530024549}
   hungerSlider: {fileID: 379589805}
-  isCampfireActive: 0
+  camera: {fileID: 330585548}
 --- !u!4 &522882068
 Transform:
   m_ObjectHideFlags: 0

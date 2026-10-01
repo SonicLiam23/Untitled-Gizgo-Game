@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
   
 
 
+    [SerializeField] private CameraAdjust camera;
 
     private void Awake()
     {
@@ -63,6 +64,7 @@ public class GameManager : MonoBehaviour
         ActiveCharacter.type = CHARACTER.HUMAN;
         ActiveCharacter.gameObject = Human;
 
+        camera.SetTarget(ActiveCharacter);
 
         StartCoroutine(HungerCoroutine());
         StartCoroutine(TempCoroutine());
@@ -107,6 +109,7 @@ public class GameManager : MonoBehaviour
             ActiveCharacter.gameObject = Human;
         }
         InputActionsManager.Instance.SwitchCharacter(ActiveCharacter);
+        camera.SetTarget(ActiveCharacter);
     }
 
     IEnumerator HungerCoroutine()
