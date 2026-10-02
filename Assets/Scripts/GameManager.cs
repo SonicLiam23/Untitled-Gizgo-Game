@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum CHARACTER
 {
@@ -20,8 +21,8 @@ public class GameManager : MonoBehaviour
 
     private Dictionary<CHARACTER, CharacterStats> CharacterStat;
 
-    public UnityEngine.UI.Slider temperatureSlider;
-    public UnityEngine.UI.Slider hungerSlider;
+    public Slider temperatureSlider;
+    public Slider hungerSlider;
     private Dictionary<CHARACTER, float> characterTemp;
     private Dictionary<CHARACTER, float> characterHunger;
 
@@ -110,6 +111,12 @@ public class GameManager : MonoBehaviour
         }
         InputActionsManager.Instance.SwitchCharacter(ActiveCharacter);
         camera.SetTarget(ActiveCharacter);
+    }
+
+    public void RestoreHunger(float pointsToRestore)
+    {
+
+        characterHunger[ActiveCharacter.type] = Mathf.Min(characterHunger[ActiveCharacter.type] + pointsToRestore, CharacterStat[ActiveCharacter.type].MaxHunger);
     }
 
     IEnumerator HungerCoroutine()
