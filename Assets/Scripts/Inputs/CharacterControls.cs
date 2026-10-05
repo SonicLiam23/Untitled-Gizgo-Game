@@ -42,8 +42,11 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
 
     public void OnSwitch(InputAction.CallbackContext context)
     {
-        rb.linearVelocity = Vector3.zero; // Stop movement when switching characters
-        GameManager.Instance.OnSwitch();
+        if (context.started)
+        {
+            rb.linearVelocity = Vector3.zero; // Stop movement when switching 
+            GameManager.Instance.OnSwitch();
+        }
     }
 
     public void OnLook(InputAction.CallbackContext context)

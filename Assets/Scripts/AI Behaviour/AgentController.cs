@@ -30,4 +30,14 @@ public class AgentController : MonoBehaviour
     {
         targetToFollow = newTarget;
     }
+
+    private void OnEnable()
+    {
+        agent.enabled = true;
+    }
+
+    private void OnDisable()
+    {
+        agent.enabled = false;
+    }
 }

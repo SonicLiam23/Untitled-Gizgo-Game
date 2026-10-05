@@ -71,9 +71,11 @@ public class GameManager : MonoBehaviour
 
         ActiveCharacter.type = CHARACTER.HUMAN;
         ActiveCharacter.gameObject = Human;
+        characterCore[CHARACTER.HUMAN].agentController.enabled = false;
 
         OtherCharacter.type = CHARACTER.ELEPHANT;
         OtherCharacter.gameObject = Elephant;
+        characterCore[CHARACTER.ELEPHANT].agentController.enabled = true;
 
 
         camera.SetTarget(ActiveCharacter);
@@ -100,20 +102,19 @@ public class GameManager : MonoBehaviour
 
     public void OnSwitch()
     {
-        // before switching get the agent of the prev character so we can set it to follow the new one.
-        AgentController oldCharAgent = characterCore[ActiveCharacter.type].agentController;
-
         // Swaps them
         (ActiveCharacter, OtherCharacter) = (OtherCharacter, ActiveCharacter);
 
         // disable the agent for the character we are controlling
+        characterCore[OtherCharacter.type].agentController.enabled = true;
         characterCore[ActiveCharacter.type].agentController.enabled = false;
+
+        // temp whilst i fix the "switching pushes the character down a bit" bug (its to do with the navmesh agent)
+        ActiveCharacter.gameObject.transform.position += new Vector3(0f, 0.2f, 0f);
 
         InputActionsManager.Instance.SwitchCharacter(ActiveCharacter);
         camera.SetTarget(ActiveCharacter);
-
-        // enable the agent
-        oldCharAgent.enabled = true;
+        characterCore[OtherCharacter.type].agentController.SetTarget(ActiveCharacter.gameObject);
 
         temperatureSlider.maxValue = characterStat[ActiveCharacter.type].MaxTemperature;
         hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
