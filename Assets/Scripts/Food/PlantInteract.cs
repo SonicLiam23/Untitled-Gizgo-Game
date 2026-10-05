@@ -19,6 +19,7 @@ public class PlantInteract : MonoBehaviour, IInteractable
         if (GameManager.Instance.ActiveCharacter.type == CHARACTER.ELEPHANT)
         {
             GameManager.Instance.RestoreHunger(25f);
+            ScoreManager.Instance.AddPlant();
             Debug.Log("Elephant ate the plant!");
             Destroy(gameObject);
         }

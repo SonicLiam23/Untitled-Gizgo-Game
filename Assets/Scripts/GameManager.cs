@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
 
     private float humanElephantDistance;
 
+    public bool isCampfireLit;
     public bool isCampfireActive;
   
 
@@ -154,7 +155,7 @@ public class GameManager : MonoBehaviour
 
             yield return new WaitForSeconds(waitingTime);
 
-            if(isCampfireActive)
+            if(isCampfireActive && isCampfireLit)
             {
                 if(characterTemp[CHARACTER.HUMAN] <= CharacterStat[CHARACTER.HUMAN].MaxTemperature)
                 {
