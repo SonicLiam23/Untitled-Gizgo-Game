@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +30,7 @@ public class GameManager : MonoBehaviour
     public GameObject Elephant => CharacterObject[(int)CHARACTER.ELEPHANT];
     public GameObject Human => CharacterObject[(int)CHARACTER.HUMAN];
 
-    private float humanElephantDistance;
+    public float HumanElephantDistance { get; private set; }
 
     public bool isCampfireActive;
   
@@ -73,28 +74,14 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        humanElephantDistance = Vector3.Distance(Human.transform.position, Elephant.transform.position);
+        HumanElephantDistance = Vector3.Distance(Human.transform.position, Elephant.transform.position);
     }
 
     private void FixedUpdate()
     {
-        if (ActiveCharacter.type == CHARACTER.HUMAN)
-        {
-            temperatureSlider.maxValue = CharacterStat[CHARACTER.HUMAN].MaxTemperature;
-            hungerSlider.maxValue = CharacterStat[CHARACTER.HUMAN].MaxHunger;
 
-            temperatureSlider.value = characterTemp[CHARACTER.HUMAN];
-            hungerSlider.value = characterHunger[CHARACTER.HUMAN];
-        }
-
-        else
-        {
-            temperatureSlider.maxValue = CharacterStat[CHARACTER.ELEPHANT].MaxTemperature;
-            hungerSlider.maxValue = CharacterStat[CHARACTER.ELEPHANT].MaxHunger;
-
-            temperatureSlider.value = characterTemp[CHARACTER.ELEPHANT];
-            hungerSlider.value = characterHunger[CHARACTER.ELEPHANT];
-        }
+        temperatureSlider.value = characterTemp[ActiveCharacter.type];
+        hungerSlider.value = characterHunger[ActiveCharacter.type];
     }
 
     public void OnSwitch()
@@ -109,8 +96,12 @@ public class GameManager : MonoBehaviour
             ActiveCharacter.type = CHARACTER.HUMAN;
             ActiveCharacter.gameObject = Human;
         }
+
         InputActionsManager.Instance.SwitchCharacter(ActiveCharacter);
         camera.SetTarget(ActiveCharacter);
+
+        temperatureSlider.maxValue = CharacterStat[ActiveCharacter.type].MaxTemperature;
+        hungerSlider.maxValue = CharacterStat[ActiveCharacter.type].MaxHunger;
     }
 
     public void RestoreHunger(float pointsToRestore)
@@ -142,7 +133,7 @@ public class GameManager : MonoBehaviour
         {
             float waitingTime = 3f;
 
-            if (ActiveCharacter.type == CHARACTER.HUMAN && humanElephantDistance <= 5f)
+            if (ActiveCharacter.type == CHARACTER.HUMAN && HumanElephantDistance <= 5f)
             {
                 waitingTime = 5f;
             }
