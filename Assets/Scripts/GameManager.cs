@@ -19,8 +19,10 @@ public class GameManager : MonoBehaviour
     [Header("MUST BE HUMAN AT INDEX 0 THEN ELEPHANT AT INDEX 1")]
     public GameObject[] CharacterObject;
     public CurrentCharacter ActiveCharacter { get; private set; } = new();
+    public CurrentCharacter OtherCharacter { get; private set; } = new();
+    private Dictionary<CHARACTER, CharacterCore> characterCore;
 
-    private Dictionary<CHARACTER, CharacterStats> CharacterStat;
+    private Dictionary<CHARACTER, CharacterStats> characterStat;
 
     public Slider temperatureSlider;
     public Slider hungerSlider;
@@ -47,26 +49,37 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-        CharacterStat = new();
+        characterStat = new();
         characterTemp = new();
         characterHunger = new();
+        characterCore = new();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
-        CharacterStat[CHARACTER.ELEPHANT] = Elephant.GetComponent<CharacterStats>();
-        CharacterStat[CHARACTER.HUMAN] = Human.GetComponent<CharacterStats>();
+        characterStat[CHARACTER.ELEPHANT] = Elephant.GetComponent<CharacterStats>();
+        characterStat[CHARACTER.HUMAN] = Human.GetComponent<CharacterStats>();
 
-        characterTemp[CHARACTER.HUMAN] = CharacterStat[CHARACTER.HUMAN].MaxTemperature;
-        characterHunger[CHARACTER.HUMAN] = CharacterStat[CHARACTER.HUMAN].MaxHunger;
-        characterTemp[CHARACTER.ELEPHANT] = CharacterStat[CHARACTER.ELEPHANT].MaxTemperature;
-        characterHunger[CHARACTER.ELEPHANT] = CharacterStat[CHARACTER.ELEPHANT].MaxHunger;
+        characterTemp[CHARACTER.HUMAN] = characterStat[CHARACTER.HUMAN].MaxTemperature;
+        characterHunger[CHARACTER.HUMAN] = characterStat[CHARACTER.HUMAN].MaxHunger;
+        characterTemp[CHARACTER.ELEPHANT] = characterStat[CHARACTER.ELEPHANT].MaxTemperature;
+        characterHunger[CHARACTER.ELEPHANT] = characterStat[CHARACTER.ELEPHANT].MaxHunger;
+
+        characterCore[CHARACTER.HUMAN] = Human.GetComponent<CharacterCore>();
+        characterCore[CHARACTER.ELEPHANT] = Elephant.GetComponent<CharacterCore>();
 
         ActiveCharacter.type = CHARACTER.HUMAN;
         ActiveCharacter.gameObject = Human;
 
+        OtherCharacter.type = CHARACTER.ELEPHANT;
+        OtherCharacter.gameObject = Elephant;
+
+
         camera.SetTarget(ActiveCharacter);
+
+        temperatureSlider.maxValue = characterStat[ActiveCharacter.type].MaxTemperature;
+        hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
 
         StartCoroutine(HungerCoroutine());
         StartCoroutine(TempCoroutine());
@@ -82,32 +95,34 @@ public class GameManager : MonoBehaviour
 
         temperatureSlider.value = characterTemp[ActiveCharacter.type];
         hungerSlider.value = characterHunger[ActiveCharacter.type];
+        characterCore[OtherCharacter.type].agentController?.SetTarget(ActiveCharacter.gameObject);
     }
 
     public void OnSwitch()
     {
-        if (ActiveCharacter.type == CHARACTER.HUMAN)
-        {
-            ActiveCharacter.type = CHARACTER.ELEPHANT;
-            ActiveCharacter.gameObject = Elephant;
-        }
-        else
-        {
-            ActiveCharacter.type = CHARACTER.HUMAN;
-            ActiveCharacter.gameObject = Human;
-        }
+        // before switching get the agent of the prev character so we can set it to follow the new one.
+        AgentController oldCharAgent = characterCore[ActiveCharacter.type].agentController;
+
+        // Swaps them
+        (ActiveCharacter, OtherCharacter) = (OtherCharacter, ActiveCharacter);
+
+        // disable the agent for the character we are controlling
+        characterCore[ActiveCharacter.type].agentController.enabled = false;
 
         InputActionsManager.Instance.SwitchCharacter(ActiveCharacter);
         camera.SetTarget(ActiveCharacter);
 
-        temperatureSlider.maxValue = CharacterStat[ActiveCharacter.type].MaxTemperature;
-        hungerSlider.maxValue = CharacterStat[ActiveCharacter.type].MaxHunger;
+        // enable the agent
+        oldCharAgent.enabled = true;
+
+        temperatureSlider.maxValue = characterStat[ActiveCharacter.type].MaxTemperature;
+        hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
     }
 
     public void RestoreHunger(float pointsToRestore)
     {
 
-        characterHunger[ActiveCharacter.type] = Mathf.Min(characterHunger[ActiveCharacter.type] + pointsToRestore, CharacterStat[ActiveCharacter.type].MaxHunger);
+        characterHunger[ActiveCharacter.type] = Mathf.Min(characterHunger[ActiveCharacter.type] + pointsToRestore, characterStat[ActiveCharacter.type].MaxHunger);
     }
 
     IEnumerator HungerCoroutine()
@@ -147,12 +162,12 @@ public class GameManager : MonoBehaviour
 
             if(isCampfireActive)
             {
-                if(characterTemp[CHARACTER.HUMAN] <= CharacterStat[CHARACTER.HUMAN].MaxTemperature)
+                if(characterTemp[CHARACTER.HUMAN] <= characterStat[CHARACTER.HUMAN].MaxTemperature)
                 {
                     characterTemp[CHARACTER.HUMAN] += 2;
                 }
 
-                if(characterTemp[CHARACTER.ELEPHANT] <= CharacterStat[CHARACTER.ELEPHANT].MaxTemperature)
+                if(characterTemp[CHARACTER.ELEPHANT] <= characterStat[CHARACTER.ELEPHANT].MaxTemperature)
                 {
                     characterTemp[CHARACTER.ELEPHANT] += 2;
                 }
