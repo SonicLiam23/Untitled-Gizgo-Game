@@ -4,13 +4,11 @@ public class PlantInteract : MonoBehaviour, IInteractable
 {
     public GameObject OnEnterRadius(Collider other)
     {
-        Debug.Log("Entered Plant Radius");
         return other.gameObject;
     }
 
     public GameObject OnExitRadius(Collider other)
     {
-        Debug.Log("exited Plant Radius");
         return other.gameObject;
     }
 
@@ -19,7 +17,6 @@ public class PlantInteract : MonoBehaviour, IInteractable
         if (GameManager.Instance.ActiveCharacter.type == CHARACTER.ELEPHANT)
         {
             GameManager.Instance.RestoreHunger(25f);
-            Debug.Log("Elephant ate the plant!");
             Destroy(gameObject);
         }
         else

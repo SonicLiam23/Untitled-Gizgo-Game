@@ -34,8 +34,8 @@ public class GameManager : MonoBehaviour
 
     public float HumanElephantDistance { get; private set; }
 
-    public bool isCampfireActive;
-  
+    public bool IsCampfireActive;
+    private bool isFollowActive = true;
 
 
     [SerializeField] private CameraAdjust camera;
@@ -71,11 +71,11 @@ public class GameManager : MonoBehaviour
 
         ActiveCharacter.type = CHARACTER.HUMAN;
         ActiveCharacter.gameObject = Human;
-        characterCore[CHARACTER.HUMAN].agentController.enabled = false;
+        characterCore[CHARACTER.HUMAN].AgentController.enabled = false;
 
         OtherCharacter.type = CHARACTER.ELEPHANT;
         OtherCharacter.gameObject = Elephant;
-        characterCore[CHARACTER.ELEPHANT].agentController.enabled = true;
+        characterCore[CHARACTER.ELEPHANT].AgentController.enabled = true;
 
 
         camera.SetTarget(ActiveCharacter);
@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
 
         temperatureSlider.value = characterTemp[ActiveCharacter.type];
         hungerSlider.value = characterHunger[ActiveCharacter.type];
-        characterCore[OtherCharacter.type].agentController?.SetTarget(ActiveCharacter.gameObject);
+        characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
     }
 
     public void OnSwitch()
@@ -105,16 +105,21 @@ public class GameManager : MonoBehaviour
         // Swaps them
         (ActiveCharacter, OtherCharacter) = (OtherCharacter, ActiveCharacter);
 
-        // disable the agent for the character we are controlling
-        characterCore[OtherCharacter.type].agentController.enabled = true;
-        characterCore[ActiveCharacter.type].agentController.enabled = false;
+        Debug.Log(isFollowActive);
+        // disable the agent for the character we are controlling, and enable the one for the one we are not (unless follow has been disabled)
+        if (isFollowActive)
+            characterCore[OtherCharacter.type].AgentController.enabled = true;
+        else
+            characterCore[OtherCharacter.type].AgentController.enabled = false;
+
+        characterCore[ActiveCharacter.type].AgentController.enabled = false;
 
         // temp whilst i fix the "switching pushes the character down a bit" bug (its to do with the navmesh agent)
-        ActiveCharacter.gameObject.transform.position += new Vector3(0f, 0.2f, 0f);
+        TEMP_fixNavmeshMovement();
 
         InputActionsManager.Instance.SwitchCharacter(ActiveCharacter);
         camera.SetTarget(ActiveCharacter);
-        characterCore[OtherCharacter.type].agentController.SetTarget(ActiveCharacter.gameObject);
+        characterCore[OtherCharacter.type].AgentController.SetTarget(ActiveCharacter.gameObject);
 
         temperatureSlider.maxValue = characterStat[ActiveCharacter.type].MaxTemperature;
         hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
@@ -143,6 +148,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ToggleFollow()
+    {
+        isFollowActive = !isFollowActive;
+        // only set it for the other character
+        characterCore[OtherCharacter.type].SetAIEnabled(isFollowActive);
+    }
+
     IEnumerator TempCoroutine()
     {
         while (true)
@@ -154,14 +166,14 @@ public class GameManager : MonoBehaviour
                 waitingTime = 5f;
             }
 
-            if(isCampfireActive)
+            if(IsCampfireActive)
             {
                 waitingTime = 2f;
             }
 
             yield return new WaitForSeconds(waitingTime);
 
-            if(isCampfireActive)
+            if(IsCampfireActive)
             {
                 if(characterTemp[CHARACTER.HUMAN] <= characterStat[CHARACTER.HUMAN].MaxTemperature)
                 {
@@ -183,5 +195,16 @@ public class GameManager : MonoBehaviour
                 --characterTemp[CHARACTER.ELEPHANT];
             }
         }
+    }
+
+
+
+    // TEMPORARY
+    // Enabling/disabling the navmesh agent pushes the object down, until i find out why or a fix, this function just corrects the position by a bit
+    public void TEMP_fixNavmeshMovement()
+    {
+        Vector3 adjustment = new Vector3(0f, 0.2f, 0f);
+        Elephant.transform.position += adjustment;
+        Human.transform.position += adjustment;
     }
 }

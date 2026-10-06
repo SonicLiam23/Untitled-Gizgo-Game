@@ -4,13 +4,20 @@ using UnityEngine;
 public class CharacterCore : MonoBehaviour
 {
     public List<IInteractable> currentInteractables;
-    public AgentController agentController { get; private set; }
-
+    // agentController should be safe to be null, we may want the core but no agent attached.
+    public AgentController AgentController { get; private set; }
+    public bool isAIEnabled { get; private set; } = true;
 
     private void Awake()
     {
         currentInteractables = new();
-        agentController = GetComponent<AgentController>();
+        AgentController = GetComponent<AgentController>();
+    }
+
+    public void SetAIEnabled(bool enabled)
+    {
+        isAIEnabled = enabled;
+        AgentController.enabled = enabled;
     }
 }
 

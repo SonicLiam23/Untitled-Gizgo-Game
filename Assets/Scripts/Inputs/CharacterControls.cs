@@ -21,9 +21,12 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
         
     }
 
-    public void OnCrouch(InputAction.CallbackContext context)
+    public void OnToggleFollow(InputAction.CallbackContext context)
     {
-        
+        if (context.started)
+        {
+            GameManager.Instance.ToggleFollow();
+        }
     }
 
     public void OnInteract(InputAction.CallbackContext context)
