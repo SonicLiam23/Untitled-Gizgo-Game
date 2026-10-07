@@ -4,15 +4,13 @@ public class CampfireInteract : MonoBehaviour, IInteractable
 {
     public GameObject OnEnterRadius(Collider other)
     {
-        Debug.Log("Entered Campfire Radius");
-        GameManager.Instance.isCampfireActive = true;
+        GameManager.Instance.IsCampfireActive = true;
         return other.gameObject;
     }
 
     public GameObject OnExitRadius(Collider other)
     {
-        Debug.Log("Exited Campfire Radius");
-        GameManager.Instance.isCampfireActive = false;
+        GameManager.Instance.IsCampfireActive = false;
         return other.gameObject;
     }
 
