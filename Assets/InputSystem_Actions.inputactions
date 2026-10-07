@@ -47,7 +47,7 @@
                     "priority": 0
                 },
                 {
-                    "name": "Crouch",
+                    "name": "ToggleFollow",
                     "type": "Button",
                     "id": "27c5f898-bc57-4ee1-8800-db469aca5fe3",
                     "expectedControlType": "",
@@ -468,7 +468,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Crouch",
+                    "action": "ToggleFollow",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -479,7 +479,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Crouch",
+                    "action": "ToggleFollow",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

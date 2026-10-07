@@ -4,13 +4,11 @@ public class MeatInteract : MonoBehaviour, IInteractable
 {
     public GameObject OnEnterRadius(Collider other)
     {
-        Debug.Log("Entered Meat Radius");
         return other.gameObject;
     }
 
     public GameObject OnExitRadius(Collider other)
     {
-        Debug.Log("exited Meat Radius");
         return other.gameObject;
     }
 

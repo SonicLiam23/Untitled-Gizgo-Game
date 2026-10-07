@@ -13,7 +13,6 @@ public class ElephantController : CharacterControls
 
         Vector2 movementInput = context.ReadValue<Vector2>();
         currentRotation = movementInput.x * rotationSpeed;
-        Debug.Log(rotationSpeed);
         
         if (movementInput.y < 0f)
         {
