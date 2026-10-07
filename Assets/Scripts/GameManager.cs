@@ -194,6 +194,11 @@ public class GameManager : MonoBehaviour
             {
                 --characterTemp[CHARACTER.ELEPHANT];
             }
+
+            if (characterTemp[ActiveCharacter.type] <= 0f)
+            {
+                OnSwitch();
+            }
         }
     }
 
