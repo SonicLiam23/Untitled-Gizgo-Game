@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
 
     public bool IsCampfireActive;
     private bool isFollowActive = true;
+    public bool SwitchingEnabled = true;
 
 
     [SerializeField] private CameraAdjust camera;
@@ -102,6 +103,8 @@ public class GameManager : MonoBehaviour
 
     public void OnSwitch()
     {
+        if (!SwitchingEnabled) return;
+
         // Swaps them
         (ActiveCharacter, OtherCharacter) = (OtherCharacter, ActiveCharacter);
 
@@ -198,6 +201,7 @@ public class GameManager : MonoBehaviour
             if (characterTemp[ActiveCharacter.type] <= 0f)
             {
                 OnSwitch();
+                SwitchingEnabled = false;
             }
         }
     }
