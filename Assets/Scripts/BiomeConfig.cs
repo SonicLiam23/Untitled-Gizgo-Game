@@ -1,30 +1,39 @@
 using System;
 using UnityEngine;
 
+
+public enum BiomeType
+{
+    Path,
+    Cold,
+    Freezing
+}
+
+
 [CreateAssetMenu(fileName = "BiomeConfig", menuName = "Scriptable Objects/BiomeConfig")]
 public class BiomeConfig : ScriptableObject
 {
     [Serializable]
     public class BiomeEntry
     {
-        public string name;
+        public BiomeType type;
         public GameObject prefab;
         public float distanceFromPath;
     }
 
     [SerializeField] public BiomeEntry[] biomes;
 
-    public GameObject GetPrefab(float distanceFromRoad)
+    public BiomeEntry GetBiome(float distanceFromRoad)
     {
         foreach (BiomeEntry biome in biomes)
         {
             if(distanceFromRoad < biome.distanceFromPath)
             {
-                return biome.prefab;
+                return biome;
             }
         }
 
-        return biomes[biomes.Length - 1].prefab;
+        return biomes[biomes.Length - 1];
     }
 
 }
