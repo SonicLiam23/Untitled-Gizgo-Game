@@ -17,5 +17,16 @@ public class CampfireInteract : MonoBehaviour, IInteractable
     public void OnInteract(GameObject interacter)
     {
         Debug.Log("Interacted with Campfire");
+
+
+        if(ScoreManager.Instance.GetSticks() >= 3 && !GameManager.Instance.isCampfireLit)
+        {
+            ScoreManager.Instance.RemoveSticks(3);
+            GameManager.Instance.isCampfireLit = true;
+        }
+        else
+        {
+            Debug.Log("Not enough sticks in inventory to light up the campfire.");
+        }
     }
 }
