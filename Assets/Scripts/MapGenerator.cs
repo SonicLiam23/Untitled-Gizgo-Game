@@ -1,5 +1,4 @@
-using Microsoft.Unity.VisualStudio.Editor;
-using UnityEditor.Experimental.GraphView;
+
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
@@ -41,8 +40,12 @@ public class MapGenerator : MonoBehaviour
         xOffset = random.Next(-10000, 10000);
         zOffset = random.Next(-10000, 10000);
 
+        GameManager.Instance.Elephant.SetActive(false);
+        GameManager.Instance.Human.SetActive(false);
         GenerateMap();
         PopulateMap();
+        GameManager.Instance.Elephant.SetActive(true);
+        GameManager.Instance.Human.SetActive(true);
     }
 
     // Update is called once per frame

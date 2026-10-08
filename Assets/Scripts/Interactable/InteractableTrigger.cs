@@ -25,9 +25,10 @@ public class InteractableTrigger : MonoBehaviour
             {
                 currentCharactersColliding.Add(player);
                 player.currentInteractables.Add(interactable);
+
             }
 
-            interactable.OnEnterRadius(other);
+            
         }
     }
 
@@ -39,9 +40,10 @@ public class InteractableTrigger : MonoBehaviour
             {
                 currentCharactersColliding.Remove(player);
                 player.currentInteractables.Remove(interactable);
+                interactable.OnExitRadius(other);
             }
 
-            interactable.OnExitRadius(other);
+            
         }
     }
 

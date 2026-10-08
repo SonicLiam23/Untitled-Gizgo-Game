@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+// https://docs.unity3d.com/6000.7/Documentation/Manual/script-serialization-dictionaries.html
 
 public enum ItemType
 {
@@ -22,7 +23,7 @@ public class ItemsConfig : ScriptableObject
     }
 
     [SerializeField] public ItemEntry[] items;
-
+    // [SerializeField] public Dictionary<ItemType, ItemEntry> itemCounts = new Dictionary<ItemType, ItemEntry>();
     public ItemEntry GetItem(ItemType type)
     {
 
@@ -34,7 +35,6 @@ public class ItemsConfig : ScriptableObject
             }
         }
 
-        return items[items.Length - 1];
+        return items[items.Length - 1]; 
     }
-
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,10 +33,9 @@ public class GameManager : MonoBehaviour
 
     public float HumanElephantDistance { get; private set; }
 
-    public bool isCampfireLit;
-    public bool isCampfireActive;
-  
+    public bool IsCampfireLit;
     public bool IsCampfireActive;
+ 
     private bool isFollowActive = true;
 
 
@@ -176,7 +174,8 @@ public class GameManager : MonoBehaviour
 
             yield return new WaitForSeconds(waitingTime);
 
-            if(isCampfireActive && isCampfireLit)
+            Debug.Log($"{IsCampfireActive}");
+            if(IsCampfireActive && IsCampfireLit)
             {
                 if(characterTemp[CHARACTER.HUMAN] <= characterStat[CHARACTER.HUMAN].MaxTemperature)
                 {

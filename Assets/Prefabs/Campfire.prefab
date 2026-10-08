@@ -127,6 +127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c12e0b45c2c823b4cb35d5127578fd2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CampfireInteract
+  litMaterial: {fileID: 2100000, guid: 5d7605baa4709364e87f6bb16736194c, type: 2}
+  unlitMaterial: {fileID: 2100000, guid: df77a8970a528b24ba97b0e8082a038a, type: 2}
+  sticksToLight: 2
 --- !u!114 &-6007682718678940563
 MonoBehaviour:
   m_ObjectHideFlags: 0
