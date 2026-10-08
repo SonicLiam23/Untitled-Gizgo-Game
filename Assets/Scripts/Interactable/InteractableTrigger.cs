@@ -25,7 +25,7 @@ public class InteractableTrigger : MonoBehaviour
             {
                 currentCharactersColliding.Add(player);
                 player.currentInteractables.Add(interactable);
-
+                interactable.OnEnterRadius(other);
             }
 
             

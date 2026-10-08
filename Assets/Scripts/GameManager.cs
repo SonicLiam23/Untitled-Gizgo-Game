@@ -108,10 +108,8 @@ public class GameManager : MonoBehaviour
 
         Debug.Log(isFollowActive);
         // disable the agent for the character we are controlling, and enable the one for the one we are not (unless follow has been disabled)
-        if (isFollowActive)
-            characterCore[OtherCharacter.type].AgentController.enabled = true;
-        else
-            characterCore[OtherCharacter.type].AgentController.enabled = false;
+        if (isFollowActive) characterCore[OtherCharacter.type].AgentController.enabled = true;
+        else characterCore[OtherCharacter.type].AgentController.enabled = false;
 
         characterCore[ActiveCharacter.type].AgentController.enabled = false;
 
@@ -136,16 +134,9 @@ public class GameManager : MonoBehaviour
     {
         while (true)
         {
-
             yield return new WaitForSeconds(3f);
-            if (ActiveCharacter.type == CHARACTER.HUMAN)
-            {
-                --characterHunger[CHARACTER.HUMAN];
-            }
-            else
-            {
-                --characterHunger[CHARACTER.ELEPHANT];
-            }
+
+            characterHunger[ActiveCharacter.type] = Mathf.Max(characterHunger[ActiveCharacter.type] - 1f, 0f);
         }
     }
 
@@ -177,24 +168,15 @@ public class GameManager : MonoBehaviour
             Debug.Log($"{IsCampfireActive}");
             if(IsCampfireActive && IsCampfireLit)
             {
-                if(characterTemp[CHARACTER.HUMAN] <= characterStat[CHARACTER.HUMAN].MaxTemperature)
+                if(characterTemp[ActiveCharacter.type] <= characterStat[ActiveCharacter.type].MaxTemperature)
                 {
-                    characterTemp[CHARACTER.HUMAN] += 2;
+                    characterTemp[ActiveCharacter.type] += 2;
                 }
 
-                if(characterTemp[CHARACTER.ELEPHANT] <= characterStat[CHARACTER.ELEPHANT].MaxTemperature)
-                {
-                    characterTemp[CHARACTER.ELEPHANT] += 2;
-                }
-
-            }
-            else if (ActiveCharacter.type == CHARACTER.HUMAN)
-            {
-                --characterTemp[CHARACTER.HUMAN];
             }
             else
             {
-                --characterTemp[CHARACTER.ELEPHANT];
+                characterTemp[ActiveCharacter.type] = Mathf.Max(characterTemp[ActiveCharacter.type] - 1f, 0f);
             }
         }
     }

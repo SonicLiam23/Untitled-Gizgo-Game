@@ -160,3 +160,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 531cfbc81eb779948b2f72e6d7408bc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MeatInteract
+  FoodRestored: 15
