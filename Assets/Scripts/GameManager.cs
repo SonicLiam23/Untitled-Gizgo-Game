@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
 
     [Header("MUST BE HUMAN AT INDEX 0 THEN ELEPHANT AT INDEX 1")]
     public GameObject[] CharacterObject;
+    public Slider[] HoveringFoodSlider;
+    public Slider[] HoveringTempSlider;
+
     public CurrentCharacter ActiveCharacter { get; private set; } = new();
     public CurrentCharacter OtherCharacter { get; private set; } = new();
     private Dictionary<CHARACTER, CharacterCore> characterCore;
@@ -83,6 +86,12 @@ public class GameManager : MonoBehaviour
 
         temperatureSlider.maxValue = characterStat[ActiveCharacter.type].MaxTemperature;
         hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
+        HoveringFoodSlider[(int)CHARACTER.HUMAN].maxValue = characterStat[CHARACTER.HUMAN].MaxHunger;
+        HoveringTempSlider[(int)CHARACTER.HUMAN].maxValue = characterStat[CHARACTER.HUMAN].MaxTemperature;
+        HoveringFoodSlider[(int)CHARACTER.ELEPHANT].maxValue = characterStat[CHARACTER.ELEPHANT].MaxHunger;
+        HoveringTempSlider[(int)CHARACTER.ELEPHANT].maxValue = characterStat[CHARACTER.ELEPHANT].MaxTemperature;
+        characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
+        characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
 
         StartCoroutine(HungerCoroutine());
         StartCoroutine(TempCoroutine());
@@ -98,7 +107,12 @@ public class GameManager : MonoBehaviour
 
         temperatureSlider.value = characterTemp[ActiveCharacter.type];
         hungerSlider.value = characterHunger[ActiveCharacter.type];
+
+        HoveringFoodSlider[(int)OtherCharacter.type].value = characterHunger[OtherCharacter.type];
+        HoveringTempSlider[(int)OtherCharacter.type].value = characterTemp[OtherCharacter.type];
+
         characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
+        
     }
 
     public void OnSwitch()
@@ -122,6 +136,9 @@ public class GameManager : MonoBehaviour
 
         temperatureSlider.maxValue = characterStat[ActiveCharacter.type].MaxTemperature;
         hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
+
+        characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
+        characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
     }
 
     public void RestoreHunger(float pointsToRestore)
