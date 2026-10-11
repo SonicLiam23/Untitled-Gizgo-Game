@@ -9,11 +9,15 @@ public class InteractableTrigger : MonoBehaviour
     private IInteractable interactable;
     List<CharacterCore> currentCharactersColliding;
 
+    [SerializeField] Canvas interactPopUp;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         currentCharactersColliding = new();
         interactable = GetComponent<IInteractable>();
+        if (interactPopUp)
+            interactPopUp.enabled = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -26,6 +30,8 @@ public class InteractableTrigger : MonoBehaviour
                 currentCharactersColliding.Add(player);
                 player.currentInteractables.Add(interactable);
                 interactable.OnEnterRadius(other);
+                if (interactPopUp)
+                    interactPopUp.enabled = true;
             }
 
             
@@ -41,6 +47,8 @@ public class InteractableTrigger : MonoBehaviour
                 currentCharactersColliding.Remove(player);
                 player.currentInteractables.Remove(interactable);
                 interactable.OnExitRadius(other);
+                if (interactPopUp)
+                    interactPopUp.enabled = false;
             }
 
             
@@ -55,6 +63,12 @@ public class InteractableTrigger : MonoBehaviour
             {
                 c.currentInteractables.Remove(interactable);
             }
+        }
+
+        if (interactPopUp)
+        {
+            Destroy(interactPopUp.gameObject);
+            interactPopUp = null;
         }
     }
 }
