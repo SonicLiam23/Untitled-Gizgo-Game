@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,7 +42,8 @@ public class GameManager : MonoBehaviour
     public bool IsCampfireActive;
  
     private bool isFollowActive = true;
-    public bool SwitchingEnabled = true;
+    public bool CanSwitchOverride = true;
+    private bool isACharacterFrozen = false;
 
 
     [SerializeField] private CameraAdjust camera;
@@ -118,12 +121,16 @@ public class GameManager : MonoBehaviour
 
     public void OnSwitch()
     {
-        if (!SwitchingEnabled) return;
+        if (!CanSwitch()) return;
+        ForceSwitch();
 
+    }
+
+    private void ForceSwitch()
+    {
         // Swaps them
         (ActiveCharacter, OtherCharacter) = (OtherCharacter, ActiveCharacter);
 
-        Debug.Log(isFollowActive);
         // disable the agent for the character we are controlling, and enable the one for the one we are not (unless follow has been disabled)
         if (isFollowActive) characterCore[OtherCharacter.type].AgentController.enabled = true;
         else characterCore[OtherCharacter.type].AgentController.enabled = false;
@@ -167,6 +174,11 @@ public class GameManager : MonoBehaviour
         characterCore[OtherCharacter.type].SetAIEnabled(isFollowActive);
     }
 
+    public bool CanSwitch()
+    {
+        return CanSwitchOverride && !(characterTemp[CHARACTER.ELEPHANT] <= 0f || characterTemp[CHARACTER.HUMAN] <= 0f /*|| characterHunger[CHARACTER.ELEPHANT] <= 0f || characterHunger[CHARACTER.HUMAN] <= 0f*/);
+    }
+
     IEnumerator TempCoroutine()
     {
         while (true)
@@ -185,7 +197,6 @@ public class GameManager : MonoBehaviour
 
             yield return new WaitForSeconds(waitingTime);
 
-            Debug.Log($"{IsCampfireActive}");
             if(IsCampfireActive && IsCampfireLit)
             {
                 if(characterTemp[ActiveCharacter.type] <= characterStat[ActiveCharacter.type].MaxTemperature)
@@ -199,10 +210,14 @@ public class GameManager : MonoBehaviour
                 characterTemp[ActiveCharacter.type] = Mathf.Max(characterTemp[ActiveCharacter.type] - 1f, 0f);
             }
 
-            if (characterTemp[ActiveCharacter.type] <= 0f)
+            if (!isACharacterFrozen && characterTemp[ActiveCharacter.type] <= 0f)
             {
-                OnSwitch();
-                SwitchingEnabled = false;
+                isACharacterFrozen = true;
+                ForceSwitch();
+            }
+            if (isACharacterFrozen && characterTemp[OtherCharacter.type] > 0f)
+            {
+                isACharacterFrozen = false;
             }
         }
     }
