@@ -88,6 +88,8 @@ public class ElephantController : CharacterControls
 
         // keep movement in sync
         movement = currentVelocity;
+        currentMaxVelocity = Mathf.Max(currentMaxVelocity - Time.deltaTime, baseMaxVelocity);
+
     }
 
     // Optional input callback: wire this to your Sprint (Shift) action in the Input System
