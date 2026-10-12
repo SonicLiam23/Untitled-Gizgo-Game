@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
  
     private bool isFollowActive = true;
 
+    private int tempToReduce;
+
 
     [SerializeField] private CameraAdjust camera;
 
@@ -112,7 +114,14 @@ public class GameManager : MonoBehaviour
         HoveringTempSlider[(int)OtherCharacter.type].value = characterTemp[OtherCharacter.type];
 
         characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
-        
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.0f))
+        {
+        }
+
+
     }
 
     public void OnSwitch()
@@ -193,7 +202,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                characterTemp[ActiveCharacter.type] = Mathf.Max(characterTemp[ActiveCharacter.type] - 1f, 0f);
+                characterTemp[ActiveCharacter.type] = Mathf.Max(characterTemp[ActiveCharacter.type] - tempToReduce, 0f);
             }
         }
     }
