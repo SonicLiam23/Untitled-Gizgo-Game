@@ -8,10 +8,13 @@ public class CharacterCore : MonoBehaviour
     public AgentController AgentController { get; private set; }
     public bool isAIEnabled { get; private set; } = true;
 
+    public Canvas OverHeadUI { get; private set; }
+
     private void Awake()
     {
         currentInteractables = new();
         AgentController = GetComponent<AgentController>();
+        OverHeadUI = GetComponentInChildren<Canvas>();
     }
 
     public void SetAIEnabled(bool enabled)

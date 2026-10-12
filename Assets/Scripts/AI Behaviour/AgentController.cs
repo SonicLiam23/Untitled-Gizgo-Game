@@ -21,12 +21,12 @@ public class AgentController : MonoBehaviour
 
         if (GameManager.Instance.HumanElephantDistance >= DistanceToStartFollowing)
         {
-            agent.isStopped = false;
-            agent.SetDestination(targetToFollow.transform.position);
+            //agent.isStopped = false;
+            //agent.SetDestination(targetToFollow.transform.position);
         }
         else
         {
-            agent.isStopped = true;
+            //agent.isStopped = true;
         }
     }
 
@@ -37,11 +37,11 @@ public class AgentController : MonoBehaviour
 
     private void OnEnable()
     {
-        agent.enabled = true;
+        //agent.enabled = true;
     }
 
     private void OnDisable()
     {
-        agent.enabled = false;
+       // agent.enabled = false;
     }
 }

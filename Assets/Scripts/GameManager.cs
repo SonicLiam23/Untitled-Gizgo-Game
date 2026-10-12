@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +17,9 @@ public class GameManager : MonoBehaviour
 
     [Header("MUST BE HUMAN AT INDEX 0 THEN ELEPHANT AT INDEX 1")]
     public GameObject[] CharacterObject;
+    public Slider[] HoveringFoodSlider;
+    public Slider[] HoveringTempSlider;
+
     public CurrentCharacter ActiveCharacter { get; private set; } = new();
     public CurrentCharacter OtherCharacter { get; private set; } = new();
     private Dictionary<CHARACTER, CharacterCore> characterCore;
@@ -34,7 +36,9 @@ public class GameManager : MonoBehaviour
 
     public float HumanElephantDistance { get; private set; }
 
+    public bool IsCampfireLit;
     public bool IsCampfireActive;
+ 
     private bool isFollowActive = true;
     public bool SwitchingEnabled = true;
 
@@ -83,6 +87,12 @@ public class GameManager : MonoBehaviour
 
         temperatureSlider.maxValue = characterStat[ActiveCharacter.type].MaxTemperature;
         hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
+        HoveringFoodSlider[(int)CHARACTER.HUMAN].maxValue = characterStat[CHARACTER.HUMAN].MaxHunger;
+        HoveringTempSlider[(int)CHARACTER.HUMAN].maxValue = characterStat[CHARACTER.HUMAN].MaxTemperature;
+        HoveringFoodSlider[(int)CHARACTER.ELEPHANT].maxValue = characterStat[CHARACTER.ELEPHANT].MaxHunger;
+        HoveringTempSlider[(int)CHARACTER.ELEPHANT].maxValue = characterStat[CHARACTER.ELEPHANT].MaxTemperature;
+        characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
+        characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
 
         StartCoroutine(HungerCoroutine());
         StartCoroutine(TempCoroutine());
@@ -98,7 +108,12 @@ public class GameManager : MonoBehaviour
 
         temperatureSlider.value = characterTemp[ActiveCharacter.type];
         hungerSlider.value = characterHunger[ActiveCharacter.type];
+
+        HoveringFoodSlider[(int)OtherCharacter.type].value = characterHunger[OtherCharacter.type];
+        HoveringTempSlider[(int)OtherCharacter.type].value = characterTemp[OtherCharacter.type];
+
         characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
+        
     }
 
     public void OnSwitch()
@@ -110,10 +125,8 @@ public class GameManager : MonoBehaviour
 
         Debug.Log(isFollowActive);
         // disable the agent for the character we are controlling, and enable the one for the one we are not (unless follow has been disabled)
-        if (isFollowActive)
-            characterCore[OtherCharacter.type].AgentController.enabled = true;
-        else
-            characterCore[OtherCharacter.type].AgentController.enabled = false;
+        if (isFollowActive) characterCore[OtherCharacter.type].AgentController.enabled = true;
+        else characterCore[OtherCharacter.type].AgentController.enabled = false;
 
         characterCore[ActiveCharacter.type].AgentController.enabled = false;
 
@@ -126,6 +139,9 @@ public class GameManager : MonoBehaviour
 
         temperatureSlider.maxValue = characterStat[ActiveCharacter.type].MaxTemperature;
         hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
+
+        characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
+        characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
     }
 
     public void RestoreHunger(float pointsToRestore)
@@ -138,16 +154,9 @@ public class GameManager : MonoBehaviour
     {
         while (true)
         {
-
             yield return new WaitForSeconds(3f);
-            if (ActiveCharacter.type == CHARACTER.HUMAN)
-            {
-                --characterHunger[CHARACTER.HUMAN];
-            }
-            else
-            {
-                --characterHunger[CHARACTER.ELEPHANT];
-            }
+
+            characterHunger[ActiveCharacter.type] = Mathf.Max(characterHunger[ActiveCharacter.type] - 1f, 0f);
         }
     }
 
@@ -176,26 +185,18 @@ public class GameManager : MonoBehaviour
 
             yield return new WaitForSeconds(waitingTime);
 
-            if(IsCampfireActive)
+            Debug.Log($"{IsCampfireActive}");
+            if(IsCampfireActive && IsCampfireLit)
             {
-                if(characterTemp[CHARACTER.HUMAN] <= characterStat[CHARACTER.HUMAN].MaxTemperature)
+                if(characterTemp[ActiveCharacter.type] <= characterStat[ActiveCharacter.type].MaxTemperature)
                 {
-                    characterTemp[CHARACTER.HUMAN] += 2;
+                    characterTemp[ActiveCharacter.type] += 2;
                 }
 
-                if(characterTemp[CHARACTER.ELEPHANT] <= characterStat[CHARACTER.ELEPHANT].MaxTemperature)
-                {
-                    characterTemp[CHARACTER.ELEPHANT] += 2;
-                }
-
-            }
-            else if (ActiveCharacter.type == CHARACTER.HUMAN)
-            {
-                --characterTemp[CHARACTER.HUMAN];
             }
             else
             {
-                --characterTemp[CHARACTER.ELEPHANT];
+                characterTemp[ActiveCharacter.type] = Mathf.Max(characterTemp[ActiveCharacter.type] - 1f, 0f);
             }
 
             if (characterTemp[ActiveCharacter.type] <= 0f)

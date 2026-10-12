@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a655744de41e3fe4489f194fd00c2b2e, type: 3}
+  m_Name: BiomeConfig
+  m_EditorClassIdentifier: Assembly-CSharp::BiomeConfig
+  biomes:
+  - type: 0
+    prefab: {fileID: 3401379670639340270, guid: 5aeee0da1f1cb264b9b804d6b944d949, type: 3}
+    distanceFromPath: 10
+  - type: 1
+    prefab: {fileID: 8802156182044677627, guid: 70c0f4ec5baf7cb439faeaad3e13f651, type: 3}
+    distanceFromPath: 70
+  - type: 2
+    prefab: {fileID: 5969827260605884048, guid: d719ed316ff59c440984ec23be855689, type: 3}
+    distanceFromPath: 300
