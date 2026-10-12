@@ -41,9 +41,10 @@ public class GameManager : MonoBehaviour
  
     private bool isFollowActive = true;
 
-    private int tempToReduce;
+    private float tempToReduce;
+    private float hungerToReduce;
 
-
+    [SerializeField] private MapManager mapManager;
     [SerializeField] private CameraAdjust camera;
 
     private void Awake()
@@ -115,10 +116,13 @@ public class GameManager : MonoBehaviour
 
         characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
 
-        RaycastHit hit;
+        //Checks current tile the player is on and changes the rate at which their temp and hunger are reduced based on the tile
+        BiomeTile tile = mapManager.GetBiomeTileAtPosition(ActiveCharacter.gameObject.transform.position);
 
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.0f))
+        if(tile != null)
         {
+            tempToReduce = tile.TempRate;
+            hungerToReduce = tile.HungerRate;
         }
 
 
@@ -162,7 +166,7 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(3f);
 
-            characterHunger[ActiveCharacter.type] = Mathf.Max(characterHunger[ActiveCharacter.type] - 1f, 0f);
+            characterHunger[ActiveCharacter.type] = Mathf.Max(characterHunger[ActiveCharacter.type] - hungerToReduce, 0f);
         }
     }
 

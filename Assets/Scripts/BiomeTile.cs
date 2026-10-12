@@ -13,6 +13,6 @@ public class BiomeTile : Tile
 {
     public BiomeType Type;
     public GameObject Prefab;
-    public int TempRate;
-    public int HungerRate;
+    public float TempRate;
+    public float HungerRate;
 }
