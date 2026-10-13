@@ -38,3 +38,7 @@ MonoBehaviour:
   Prefab: {fileID: 8802156182044677627, guid: 70c0f4ec5baf7cb439faeaad3e13f651, type: 3}
   TempRate: 2
   HungerRate: 2
+  FoodResource: 3
+  SticksResource: 3
+  CampfiresResource: 2
+  Trees: 3

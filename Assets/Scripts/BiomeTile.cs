@@ -8,6 +8,15 @@ public enum BiomeType
     Freezing
 }
 
+public enum AmountOfResources
+{
+    None,
+    VeryLow,
+    Low,
+    Medium,
+    High
+}
+
 [CreateAssetMenu(fileName = "BiomeTile", menuName = "Tiles/Biome Tile")]
 public class BiomeTile : Tile
 {
@@ -15,4 +24,9 @@ public class BiomeTile : Tile
     public GameObject Prefab;
     public float TempRate;
     public float HungerRate;
+    public AmountOfResources FoodResource;
+    public AmountOfResources SticksResource;
+    public AmountOfResources CampfiresResource;
+    public AmountOfResources Trees;
+
 }

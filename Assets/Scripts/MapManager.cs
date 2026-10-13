@@ -2,9 +2,19 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.WSA;
+
 
 public class MapManager : MonoBehaviour
 {
+    [Header("CONFIGURE THRESHOLDS FOR THE AMOUNT OF RESOURCES")]
+    [SerializeField] private float VeryLowValue;
+    [SerializeField] private float LowValue;
+    [SerializeField] private float MediumValue;
+    [SerializeField] private float HighValue;
+
+    [Header("OTHER SERIALIZABLES")]
+
     // [SerializeField] public int mapWidth;
     // [SerializeField] public int mapDepth;
     //  public Transform floorContainer;
@@ -14,7 +24,7 @@ public class MapManager : MonoBehaviour
     //  public float wobbleAmount = 8f;
     //  public float magnitude;
 
-    //  [SerializeField] int seed;
+    [SerializeField] int seed;
     //  private int xOffset, zOffset;
 
 
@@ -24,6 +34,8 @@ public class MapManager : MonoBehaviour
     public BiomeConfig biomeConfig;
     public ItemsConfig itemConfig;
 
+    [SerializeField] private Transform interactablesContainer;
+
     private System.Random random = new System.Random();
 
     //BiomeConfig.BiomeEntry[,] terrainObjects;
@@ -31,7 +43,7 @@ public class MapManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        /*if (seed != 0)
+        if (seed != 0)
         {
             random = new System.Random(seed);
         }
@@ -40,14 +52,9 @@ public class MapManager : MonoBehaviour
             random = new System.Random();
         }
 
-        terrainObjects = new BiomeConfig.BiomeEntry[mapWidth, mapDepth];
-
-        xOffset = random.Next(-10000, 10000);
-        zOffset = random.Next(-10000, 10000);*/
-
 
         PopulateTileArray();
-
+        PopulateMap();
 
         //GameManager.Instance.Elephant.SetActive(false);
         // GameManager.Instance.Human.SetActive(false);
@@ -63,11 +70,11 @@ public class MapManager : MonoBehaviour
 
     }
 
-    private void PopulateTileArray()
+    void PopulateTileArray()
     {
         BoundsInt bounds = tilemap.cellBounds;
 
-        foreach(Vector3Int position in bounds.allPositionsWithin)
+        foreach (Vector3Int position in bounds.allPositionsWithin)
         {
             TileBase tile = tilemap.GetTile(position);
 
@@ -80,14 +87,210 @@ public class MapManager : MonoBehaviour
 
     public BiomeTile GetBiomeTileAtPosition(Vector3 worldPosition)
     {
-        worldPosition.y = 0f;
-
         Vector3Int cellPosition = tilemap.WorldToCell(worldPosition);
 
         return tilemap.GetTile<BiomeTile>(cellPosition);
     }
 
-    /* void GenerateMap()
+    void PopulateMap()
+    {
+        tilemap.CompressBounds();
+
+        BoundsInt bounds = tilemap.cellBounds;
+
+        foreach (Vector3Int position in bounds.allPositionsWithin)
+        {
+            if (!tilemap.HasTile(position))
+            {
+                continue;
+            }
+
+            int x = position.x;
+            int z = position.z;
+            int y = position.y;
+
+            BiomeTile tile = GetBiomeTileAtPosition(new Vector3Int(x, y, z));
+
+            if (tile != null)
+            {
+                SpawnItem(tile, tile.transform.GetPosition(), x, y, z);
+            }
+        }
+    }
+
+    float GetSpawnChance(AmountOfResources resource)
+    {
+        switch (resource)
+        {
+            case AmountOfResources.None:
+                return 0;
+
+            case AmountOfResources.VeryLow:
+                return VeryLowValue;
+
+            case AmountOfResources.Low:
+                return LowValue;
+
+            case AmountOfResources.Medium:
+                return MediumValue;
+
+            case AmountOfResources.High:
+                return HighValue;
+
+            default:
+                return 0f;
+        }
+    }
+
+    void SpawnItem(BiomeTile tile, Vector3 tilePos, int x, int y, int z)
+    {
+        float chance = 0.1f;
+        if (Random.value > chance)
+        {
+            return;
+        }
+        else
+        {
+            bool hasItemBeenSpawned = false;
+
+            if (!hasItemBeenSpawned)
+            {
+                if (Random.value < GetSpawnChance(tile.FoodResource))
+                {
+                    float roll = Random.value;
+                    Debug.Log($"Food roll: {roll}, chance: {GetSpawnChance(tile.FoodResource)}");
+
+
+                    ItemType itemType = Random.value < 0.5f ? ItemType.Plant : ItemType.Meat;
+
+                    ItemsConfig.ItemEntry foodItem = itemConfig.GetItem(itemType);
+                    GameObject foodObject = foodItem.Prefab;
+                    GameObject foodInstance = Instantiate(foodObject, new Vector3(x, z + 1, y), Quaternion.identity);
+
+                    foodInstance.name = string.Format("foodObj_x{0}_z{1}", x, z);
+                    foodInstance.transform.SetParent(interactablesContainer, false);
+
+                    hasItemBeenSpawned = true;
+                    return;
+                }
+                else if (Random.value < GetSpawnChance(tile.SticksResource))
+                {
+                    ItemsConfig.ItemEntry stickItem = itemConfig.GetItem(ItemType.Stick);
+                    GameObject stickObject = stickItem.Prefab;
+                    GameObject stickInstance = Instantiate(stickObject, new Vector3(x, z + 1, y), Quaternion.identity);
+
+                    stickInstance.name = string.Format("stickObj_x{0}_z{1}", x, z);
+                    stickInstance.transform.SetParent(interactablesContainer, false);
+
+                    hasItemBeenSpawned = true;
+                    return;
+                }
+                else if (Random.value < GetSpawnChance(tile.CampfiresResource))
+                {
+                    ItemsConfig.ItemEntry campfireItem = itemConfig.GetItem(ItemType.Campfire);
+                    GameObject campfireObject = campfireItem.Prefab;
+                    GameObject campfireInstance = Instantiate(campfireObject, new Vector3(x, z + 1, y), Quaternion.identity);
+
+                    campfireInstance.name = string.Format("campfireObj_x{0}_z{1}", x, z);
+                    campfireInstance.transform.SetParent(interactablesContainer, false);
+
+                    hasItemBeenSpawned = true;
+                    return;
+                }
+                else if (Random.value < GetSpawnChance(tile.Trees))
+                {
+                    ItemsConfig.ItemEntry treeItem = itemConfig.GetItem(ItemType.Tree);
+                    GameObject treeObject = treeItem.Prefab;
+                    GameObject treeInstance = Instantiate(treeObject, new Vector3(x, z + 1, y), Quaternion.identity);
+
+                    treeInstance.name = string.Format("treeObj_x{0}_z{1}", x, z);
+                    treeInstance.transform.SetParent(interactablesContainer, false);
+
+                    hasItemBeenSpawned = true;
+                    return;
+                }
+            }
+        }
+    }
+}
+
+    
+   /*void ChooseItem(BiomeType type, Vector3 tilePos)
+    {
+        if (random.Next(0, 100) < chance)
+        {
+            int roll = random.Next(0, 10);
+
+            switch (roll)
+            {
+                case 0 or 1:
+
+                    ItemsConfig.ItemEntry plantItem = itemConfig.GetItem(ItemType.Plant);
+                    GameObject plantObject = plantItem.Prefab;
+                    GameObject plantInstance = Instantiate(plantObject, new Vector3(x, z + 1, y), Quaternion.identity);
+
+                    plantInstance.name = string.Format("plantObj_x{0}_z{1}", x, z);
+                    plantInstance.transform.SetParent(interactablesContainer, false);
+
+                    break;
+
+                case 2 or 3:
+
+                    ItemsConfig.ItemEntry meatItem = itemConfig.GetItem(ItemType.Meat);
+                    GameObject meatObject = meatItem.Prefab;
+                    GameObject meatInstance = Instantiate(meatObject, new Vector3(x, z + 1, y), Quaternion.identity);
+
+                    meatInstance.name = string.Format("meatObj_x{0}_z{1}", x, z);
+                    meatInstance.transform.SetParent(interactablesContainer, false);
+
+                    break;
+
+
+                case 4 or 5:
+
+                    ItemsConfig.ItemEntry stickItem = itemConfig.GetItem(ItemType.Stick);
+                    GameObject stickObject = stickItem.Prefab;
+                    GameObject stickInstance = Instantiate(stickObject, new Vector3(x, z + 1, y), Quaternion.identity);
+
+                    stickInstance.name = string.Format("stickObj_x{0}_z{1}", x, z);
+                    stickInstance.transform.SetParent(interactablesContainer, false);
+
+
+                    break;
+
+                case 6:
+
+                    ItemsConfig.ItemEntry campfireItem = itemConfig.GetItem(ItemType.Campfire);
+                    GameObject campfireObject = campfireItem.Prefab;
+                    GameObject campfireInstance = Instantiate(campfireObject, new Vector3(x, z + 1, y), Quaternion.identity);
+
+                    campfireInstance.name = string.Format("campfireObj_x{0}_z{1}", x, z);
+                    campfireInstance.transform.SetParent(interactablesContainer, false);
+
+
+                    break;
+
+                case 7 or 8 or 9:
+
+                    ItemsConfig.ItemEntry treeItem = itemConfig.GetItem(ItemType.Tree);
+                    GameObject treeObject = treeItem.Prefab;
+                    GameObject treeInstance = Instantiate(treeObject, new Vector3(x, z + 1, y), Quaternion.identity);
+
+                    treeInstance.name = string.Format("campfireObj_x{0}_z{1}", x, z);
+                    treeInstance.transform.SetParent(interactablesContainer, false);
+
+
+                    break;
+            }
+        }
+        else
+        {
+            return;
+        }
+    }*/
+       
+
+/* void GenerateMap()
      {
          for (int x = 0; x < mapWidth; x++)
          {
@@ -117,98 +320,4 @@ public class MapManager : MonoBehaviour
              }
          }
      }
-
-     void PopulateMap()
-     {
-         for (int x = 0; x < mapWidth; x++)
-         {
-             for (int z = 0; z < mapDepth; z++)
-             {
-                 switch (terrainObjects[x, z].Type)
-                 {
-                     case BiomeType.Path:
-
-                         ChooseItem(50, x, z);
-                         break;
-
-                     case BiomeType.Cold:
-
-                         ChooseItem(20, x, z);
-                         break;
-                     case BiomeType.Freezing:
-
-                         ChooseItem(10, x, z);
-                         break;
-                     default:
-
-                         break;
-                 }
-
-             }
-         }
-     }
-
-
-
-     void ChooseItem(int chance, int x, int z)
-     {
-         if (random.Next(0, 10000) < chance)
-         {
-             int roll = random.Next(0, 5);
-
-             switch (roll)
-             {
-                 case 0:
-
-                     ItemsConfig.ItemEntry plantItem = itemConfig.GetItem(ItemType.Plant);
-                     GameObject plantObject = plantItem.Prefab;
-                     GameObject plantInstance = Instantiate(plantObject, new Vector3(x, 1, z), Quaternion.identity);
-
-                     plantInstance.name = string.Format("plantObj_x{0}_z{1}", x, z);
-                     plantInstance.transform.SetParent(interactablesContainer, false);
-
-                     break;
-
-                 case 1:
-
-                     ItemsConfig.ItemEntry meatItem = itemConfig.GetItem(ItemType.Meat);
-                     GameObject meatObject = meatItem.Prefab;
-                     GameObject meatInstance = Instantiate(meatObject, new Vector3(x, 1, z), Quaternion.identity);
-
-                     meatInstance.name = string.Format("meatObj_x{0}_z{1}", x, z);
-                     meatInstance.transform.SetParent(interactablesContainer, false);
-
-                     break;
-
-
-                 case 2 or 3:
-
-                     ItemsConfig.ItemEntry stickItem = itemConfig.GetItem(ItemType.Stick);
-                     GameObject stickObject = stickItem.Prefab;
-                     GameObject stickInstance = Instantiate(stickObject, new Vector3(x, 1, z), Quaternion.identity);
-
-                     stickInstance.name = string.Format("stickObj_x{0}_z{1}", x, z);
-                     stickInstance.transform.SetParent(interactablesContainer, false);
-
-
-                     break;
-
-                 case 4:
-
-                     ItemsConfig.ItemEntry campfireItem = itemConfig.GetItem(ItemType.Campfire);
-                     GameObject campfireObject = campfireItem.Prefab;
-                     GameObject campfireInstance = Instantiate(campfireObject, new Vector3(x, 1, z), Quaternion.identity);
-
-                     campfireInstance.name = string.Format("campfireObj_x{0}_z{1}", x, z);
-                     campfireInstance.transform.SetParent(interactablesContainer, false);
-
-
-                     break;
-             }
-         }
-         else
-         {
-             return;
-         }
-     }*/
-}
+}*/
