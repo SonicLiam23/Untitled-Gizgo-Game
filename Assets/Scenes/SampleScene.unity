@@ -913,9 +913,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4fad406f6cd37b4082b43ca343fd39e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapManager
-  VeryLowValue: 0.1
+  VeryLowValue: 0.05
   LowValue: 0.2
-  MediumValue: 0.45
+  MediumValue: 0.35
   HighValue: 0.7
   seed: 0
   tilemap: {fileID: 2066337870}

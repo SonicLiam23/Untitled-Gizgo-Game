@@ -40,5 +40,5 @@ MonoBehaviour:
   HungerRate: 1
   FoodResource: 2
   SticksResource: 2
-  CampfiresResource: 3
-  Trees: 1
+  CampfiresResource: 1
+  Trees: 0

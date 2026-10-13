@@ -43,14 +43,14 @@ public class MapManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (seed != 0)
+        /*if (seed != 0)
         {
             random = new System.Random(seed);
         }
         else
         {
             random = new System.Random();
-        }
+        }*/
 
 
         PopulateTileArray();
@@ -109,7 +109,7 @@ public class MapManager : MonoBehaviour
             int z = position.z;
             int y = position.y;
 
-            BiomeTile tile = GetBiomeTileAtPosition(new Vector3Int(x, y, z));
+            BiomeTile tile = tilemap.GetTile<BiomeTile>(position);
 
             if (tile != null)
             {
