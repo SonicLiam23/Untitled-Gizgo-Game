@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: ItemsConfig
   m_EditorClassIdentifier: Assembly-CSharp::ItemsConfig
   items:
-  - type: 0
-    prefab: {fileID: 3590328966683382602, guid: 2606ef471792b314d86822c5aebbf63b, type: 3}
-  - type: 1
-    prefab: {fileID: 8084768821714534550, guid: 4ec5db6dc51758241a0ccca07016539d, type: 3}
-  - type: 2
-    prefab: {fileID: 6582097629322115208, guid: 25afaa7a561a79848ade8137c3642166, type: 3}
-  - type: 3
-    prefab: {fileID: 4153397690658922446, guid: 0129454680bc64146a3b2399d3c4bd15, type: 3}
-  - type: 4
-    prefab: {fileID: 1486441460076814811, guid: 2bf285f448de9004484f829e97e9f4bb, type: 3}
+  - Type: 0
+    Prefab: {fileID: 3590328966683382602, guid: 2606ef471792b314d86822c5aebbf63b, type: 3}
+  - Type: 1
+    Prefab: {fileID: 8084768821714534550, guid: 4ec5db6dc51758241a0ccca07016539d, type: 3}
+  - Type: 2
+    Prefab: {fileID: 6582097629322115208, guid: 25afaa7a561a79848ade8137c3642166, type: 3}
+  - Type: 3
+    Prefab: {fileID: 4153397690658922446, guid: 0129454680bc64146a3b2399d3c4bd15, type: 3}
+  - Type: 4
+    Prefab: {fileID: 1486441460076814811, guid: 2bf285f448de9004484f829e97e9f4bb, type: 3}
