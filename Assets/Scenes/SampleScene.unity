@@ -5075,6 +5075,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ElephantController
   MovementSpeed: 5
   rotationSpeed: 20
+  baseMaxVelocity: 2
+  maxVelocityCap: 6
+  sprintStep: 2
+  acceleration: 3
+  deceleration: 4
+  boostStep: 2
+  maxBoost: 6
+  decayRate: 2
+  reverseMaxVelocity: 2
 --- !u!1 &379589803
 GameObject:
   m_ObjectHideFlags: 0
