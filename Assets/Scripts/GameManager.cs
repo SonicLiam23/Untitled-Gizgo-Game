@@ -124,7 +124,7 @@ public class GameManager : MonoBehaviour
         characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
 
         //Checks current tile the player is on and changes the rate at which their temp and hunger are reduced based on the tile
-        BiomeTile tile = mapManager.GetBiomeTileAtPosition(ActiveCharacter.gameObject.transform.position);
+        BiomeTile tile = mapManager?.GetBiomeTileAtPosition(ActiveCharacter.gameObject.transform.position);
 
         if(tile != null)
         {
