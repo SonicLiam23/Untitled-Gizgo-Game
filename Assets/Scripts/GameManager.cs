@@ -17,9 +17,14 @@ public class GameManager : MonoBehaviour
 
     [Header("MUST BE HUMAN AT INDEX 0 THEN ELEPHANT AT INDEX 1")]
     public GameObject[] CharacterObject;
-    public CurrentCharacter ActiveCharacter { get; private set; } = new();
+    public Slider[] HoveringFoodSlider;
+    public Slider[] HoveringTempSlider;
 
-    private Dictionary<CHARACTER, CharacterStats> CharacterStat;
+    public CurrentCharacter ActiveCharacter { get; private set; } = new();
+    public CurrentCharacter OtherCharacter { get; private set; } = new();
+    private Dictionary<CHARACTER, CharacterCore> characterCore;
+
+    private Dictionary<CHARACTER, CharacterStats> characterStat;
 
     public Slider temperatureSlider;
     public Slider hungerSlider;
@@ -29,10 +34,12 @@ public class GameManager : MonoBehaviour
     public GameObject Elephant => CharacterObject[(int)CHARACTER.ELEPHANT];
     public GameObject Human => CharacterObject[(int)CHARACTER.HUMAN];
 
-    private float humanElephantDistance;
+    public float HumanElephantDistance { get; private set; }
 
-    public bool isCampfireActive;
-  
+    public bool IsCampfireLit;
+    public bool IsCampfireActive;
+ 
+    private bool isFollowActive = true;
 
 
     [SerializeField] private CameraAdjust camera;
@@ -46,26 +53,45 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-        CharacterStat = new();
+        characterStat = new();
         characterTemp = new();
         characterHunger = new();
+        characterCore = new();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
-        CharacterStat[CHARACTER.ELEPHANT] = Elephant.GetComponent<CharacterStats>();
-        CharacterStat[CHARACTER.HUMAN] = Human.GetComponent<CharacterStats>();
+        characterStat[CHARACTER.ELEPHANT] = Elephant.GetComponent<CharacterStats>();
+        characterStat[CHARACTER.HUMAN] = Human.GetComponent<CharacterStats>();
 
-        characterTemp[CHARACTER.HUMAN] = CharacterStat[CHARACTER.HUMAN].MaxTemperature;
-        characterHunger[CHARACTER.HUMAN] = CharacterStat[CHARACTER.HUMAN].MaxHunger;
-        characterTemp[CHARACTER.ELEPHANT] = CharacterStat[CHARACTER.ELEPHANT].MaxTemperature;
-        characterHunger[CHARACTER.ELEPHANT] = CharacterStat[CHARACTER.ELEPHANT].MaxHunger;
+        characterTemp[CHARACTER.HUMAN] = characterStat[CHARACTER.HUMAN].MaxTemperature;
+        characterHunger[CHARACTER.HUMAN] = characterStat[CHARACTER.HUMAN].MaxHunger;
+        characterTemp[CHARACTER.ELEPHANT] = characterStat[CHARACTER.ELEPHANT].MaxTemperature;
+        characterHunger[CHARACTER.ELEPHANT] = characterStat[CHARACTER.ELEPHANT].MaxHunger;
+
+        characterCore[CHARACTER.HUMAN] = Human.GetComponent<CharacterCore>();
+        characterCore[CHARACTER.ELEPHANT] = Elephant.GetComponent<CharacterCore>();
 
         ActiveCharacter.type = CHARACTER.HUMAN;
         ActiveCharacter.gameObject = Human;
+        characterCore[CHARACTER.HUMAN].AgentController.enabled = false;
+
+        OtherCharacter.type = CHARACTER.ELEPHANT;
+        OtherCharacter.gameObject = Elephant;
+        characterCore[CHARACTER.ELEPHANT].AgentController.enabled = true;
+
 
         camera.SetTarget(ActiveCharacter);
+
+        temperatureSlider.maxValue = characterStat[ActiveCharacter.type].MaxTemperature;
+        hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
+        HoveringFoodSlider[(int)CHARACTER.HUMAN].maxValue = characterStat[CHARACTER.HUMAN].MaxHunger;
+        HoveringTempSlider[(int)CHARACTER.HUMAN].maxValue = characterStat[CHARACTER.HUMAN].MaxTemperature;
+        HoveringFoodSlider[(int)CHARACTER.ELEPHANT].maxValue = characterStat[CHARACTER.ELEPHANT].MaxHunger;
+        HoveringTempSlider[(int)CHARACTER.ELEPHANT].maxValue = characterStat[CHARACTER.ELEPHANT].MaxTemperature;
+        characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
+        characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
 
         StartCoroutine(HungerCoroutine());
         StartCoroutine(TempCoroutine());
@@ -73,67 +99,69 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        humanElephantDistance = Vector3.Distance(Human.transform.position, Elephant.transform.position);
+        HumanElephantDistance = Vector3.Distance(Human.transform.position, Elephant.transform.position);
     }
 
     private void FixedUpdate()
     {
-        if (ActiveCharacter.type == CHARACTER.HUMAN)
-        {
-            temperatureSlider.maxValue = CharacterStat[CHARACTER.HUMAN].MaxTemperature;
-            hungerSlider.maxValue = CharacterStat[CHARACTER.HUMAN].MaxHunger;
 
-            temperatureSlider.value = characterTemp[CHARACTER.HUMAN];
-            hungerSlider.value = characterHunger[CHARACTER.HUMAN];
-        }
+        temperatureSlider.value = characterTemp[ActiveCharacter.type];
+        hungerSlider.value = characterHunger[ActiveCharacter.type];
 
-        else
-        {
-            temperatureSlider.maxValue = CharacterStat[CHARACTER.ELEPHANT].MaxTemperature;
-            hungerSlider.maxValue = CharacterStat[CHARACTER.ELEPHANT].MaxHunger;
+        HoveringFoodSlider[(int)OtherCharacter.type].value = characterHunger[OtherCharacter.type];
+        HoveringTempSlider[(int)OtherCharacter.type].value = characterTemp[OtherCharacter.type];
 
-            temperatureSlider.value = characterTemp[CHARACTER.ELEPHANT];
-            hungerSlider.value = characterHunger[CHARACTER.ELEPHANT];
-        }
+        characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
+        
     }
 
     public void OnSwitch()
     {
-        if (ActiveCharacter.type == CHARACTER.HUMAN)
-        {
-            ActiveCharacter.type = CHARACTER.ELEPHANT;
-            ActiveCharacter.gameObject = Elephant;
-        }
-        else
-        {
-            ActiveCharacter.type = CHARACTER.HUMAN;
-            ActiveCharacter.gameObject = Human;
-        }
+        // Swaps them
+        (ActiveCharacter, OtherCharacter) = (OtherCharacter, ActiveCharacter);
+
+        Debug.Log(isFollowActive);
+        // disable the agent for the character we are controlling, and enable the one for the one we are not (unless follow has been disabled)
+        if (isFollowActive) characterCore[OtherCharacter.type].AgentController.enabled = true;
+        else characterCore[OtherCharacter.type].AgentController.enabled = false;
+
+        characterCore[ActiveCharacter.type].AgentController.enabled = false;
+
+        // temp whilst i fix the "switching pushes the character down a bit" bug (its to do with the navmesh agent)
+        TEMP_fixNavmeshMovement();
+
         InputActionsManager.Instance.SwitchCharacter(ActiveCharacter);
         camera.SetTarget(ActiveCharacter);
+        characterCore[OtherCharacter.type].AgentController.SetTarget(ActiveCharacter.gameObject);
+
+        temperatureSlider.maxValue = characterStat[ActiveCharacter.type].MaxTemperature;
+        hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
+
+        characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
+        characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
     }
 
     public void RestoreHunger(float pointsToRestore)
     {
 
-        characterHunger[ActiveCharacter.type] = Mathf.Min(characterHunger[ActiveCharacter.type] + pointsToRestore, CharacterStat[ActiveCharacter.type].MaxHunger);
+        characterHunger[ActiveCharacter.type] = Mathf.Min(characterHunger[ActiveCharacter.type] + pointsToRestore, characterStat[ActiveCharacter.type].MaxHunger);
     }
 
     IEnumerator HungerCoroutine()
     {
         while (true)
         {
-
             yield return new WaitForSeconds(3f);
-            if (ActiveCharacter.type == CHARACTER.HUMAN)
-            {
-                --characterHunger[CHARACTER.HUMAN];
-            }
-            else
-            {
-                --characterHunger[CHARACTER.ELEPHANT];
-            }
+
+            characterHunger[ActiveCharacter.type] = Mathf.Max(characterHunger[ActiveCharacter.type] - 1f, 0f);
         }
+    }
+
+    public void ToggleFollow()
+    {
+        isFollowActive = !isFollowActive;
+        // only set it for the other character
+        characterCore[OtherCharacter.type].SetAIEnabled(isFollowActive);
     }
 
     IEnumerator TempCoroutine()
@@ -142,39 +170,42 @@ public class GameManager : MonoBehaviour
         {
             float waitingTime = 3f;
 
-            if (ActiveCharacter.type == CHARACTER.HUMAN && humanElephantDistance <= 5f)
+            if (ActiveCharacter.type == CHARACTER.HUMAN && HumanElephantDistance <= 5f)
             {
                 waitingTime = 5f;
             }
 
-            if(isCampfireActive)
+            if(IsCampfireActive)
             {
                 waitingTime = 2f;
             }
 
             yield return new WaitForSeconds(waitingTime);
 
-            if(isCampfireActive)
+            Debug.Log($"{IsCampfireActive}");
+            if(IsCampfireActive && IsCampfireLit)
             {
-                if(characterTemp[CHARACTER.HUMAN] <= CharacterStat[CHARACTER.HUMAN].MaxTemperature)
+                if(characterTemp[ActiveCharacter.type] <= characterStat[ActiveCharacter.type].MaxTemperature)
                 {
-                    characterTemp[CHARACTER.HUMAN] += 2;
+                    characterTemp[ActiveCharacter.type] += 2;
                 }
 
-                if(characterTemp[CHARACTER.ELEPHANT] <= CharacterStat[CHARACTER.ELEPHANT].MaxTemperature)
-                {
-                    characterTemp[CHARACTER.ELEPHANT] += 2;
-                }
-
-            }
-            else if (ActiveCharacter.type == CHARACTER.HUMAN)
-            {
-                --characterTemp[CHARACTER.HUMAN];
             }
             else
             {
-                --characterTemp[CHARACTER.ELEPHANT];
+                characterTemp[ActiveCharacter.type] = Mathf.Max(characterTemp[ActiveCharacter.type] - 1f, 0f);
             }
         }
+    }
+
+
+
+    // TEMPORARY
+    // Enabling/disabling the navmesh agent pushes the object down, until i find out why or a fix, this function just corrects the position by a bit
+    public void TEMP_fixNavmeshMovement()
+    {
+        Vector3 adjustment = new Vector3(0f, 0.2f, 0f);
+        Elephant.transform.position += adjustment;
+        Human.transform.position += adjustment;
     }
 }

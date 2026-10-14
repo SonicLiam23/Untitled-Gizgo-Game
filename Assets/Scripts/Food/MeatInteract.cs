@@ -2,15 +2,14 @@ using UnityEngine;
 
 public class MeatInteract : MonoBehaviour, IInteractable
 {
+    public float FoodRestored = 10f;
     public GameObject OnEnterRadius(Collider other)
     {
-        Debug.Log("Entered Meat Radius");
         return other.gameObject;
     }
 
     public GameObject OnExitRadius(Collider other)
     {
-        Debug.Log("exited Meat Radius");
         return other.gameObject;
     }
 
@@ -18,7 +17,9 @@ public class MeatInteract : MonoBehaviour, IInteractable
     {
         if (GameManager.Instance.ActiveCharacter.type == CHARACTER.HUMAN)
         {
-            GameManager.Instance.RestoreHunger(5f);
+            GameManager.Instance.RestoreHunger(FoodRestored);
+            ScoreManager.Instance.AddMeat();
+            
             Destroy(gameObject);
         }
         else
