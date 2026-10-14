@@ -9,7 +9,7 @@ public class InteractableTrigger : MonoBehaviour
     private IInteractable interactable;
     List<CharacterCore> currentCharactersColliding;
 
-    [SerializeField] Canvas interactPopUp;
+    [SerializeField] public Canvas interactPopUp;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

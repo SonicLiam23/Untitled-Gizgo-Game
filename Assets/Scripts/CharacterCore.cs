@@ -10,6 +10,12 @@ public class CharacterCore : MonoBehaviour
 
     public Canvas OverHeadUI { get; private set; }
 
+    public bool InLitCampfireRadius = false;
+    public bool HeatLossGainEnabled = true;
+
+    public bool TempLossEnabled = true;
+
+
     private void Awake()
     {
         currentInteractables = new();
