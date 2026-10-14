@@ -45,7 +45,10 @@ public class GameManager : MonoBehaviour
     public bool CanSwitchOverride = true;
     private bool isACharacterFrozen = false;
 
+    private float tempToReduce;
+    private float hungerToReduce;
 
+    [SerializeField] private MapManager mapManager;
     [SerializeField] private CameraAdjust camera;
 
     private void Awake()
@@ -116,7 +119,17 @@ public class GameManager : MonoBehaviour
         HoveringTempSlider[(int)OtherCharacter.type].value = characterTemp[OtherCharacter.type];
 
         characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
-        
+
+        //Checks current tile the player is on and changes the rate at which their temp and hunger are reduced based on the tile
+        BiomeTile tile = mapManager.GetBiomeTileAtPosition(ActiveCharacter.gameObject.transform.position);
+
+        if(tile != null)
+        {
+            tempToReduce = tile.TempRate;
+            hungerToReduce = tile.HungerRate;
+        }
+
+
     }
 
     public void OnSwitch()
@@ -163,7 +176,7 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(3f);
 
-            characterHunger[ActiveCharacter.type] = Mathf.Max(characterHunger[ActiveCharacter.type] - 1f, 0f);
+            characterHunger[ActiveCharacter.type] = Mathf.Max(characterHunger[ActiveCharacter.type] - hungerToReduce, 0f);
         }
     }
 
@@ -207,7 +220,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                characterTemp[ActiveCharacter.type] = Mathf.Max(characterTemp[ActiveCharacter.type] - 1f, 0f);
+                characterTemp[ActiveCharacter.type] = Mathf.Max(characterTemp[ActiveCharacter.type] - tempToReduce, 0f);
             }
 
             if (!isACharacterFrozen && characterTemp[ActiveCharacter.type] <= 0f)

@@ -2,13 +2,6 @@ using System;
 using UnityEngine;
 
 
-public enum BiomeType
-{
-    Path,
-    Cold,
-    Freezing
-}
-
 
 [CreateAssetMenu(fileName = "BiomeConfig", menuName = "Scriptable Objects/BiomeConfig")]
 public class BiomeConfig : ScriptableObject
@@ -16,24 +9,26 @@ public class BiomeConfig : ScriptableObject
     [Serializable]
     public class BiomeEntry
     {
-        public BiomeType type;
-        public GameObject prefab;
-        public float distanceFromPath;
+        //public BiomeType Type;
+        public GameObject Prefab;
+        //public float DistanceFromPath;
+        public float TempRate;
+        public float HungerRate;
     }
 
     [SerializeField] public BiomeEntry[] biomes;
 
-    public BiomeEntry GetBiome(float distanceFromRoad)
+    /*public BiomeEntry GetBiome(float distanceFromRoad)
     {
         foreach (BiomeEntry biome in biomes)
         {
-            if(distanceFromRoad < biome.distanceFromPath)
+            if(distanceFromRoad < biome.DistanceFromPath)
             {
                 return biome;
             }
         }
 
         return biomes[biomes.Length - 1];
-    }
+    }*/
 
 }
