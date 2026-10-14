@@ -34,7 +34,7 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 5969827260605884048, guid: d719ed316ff59c440984ec23be855689, type: 3}
   m_Flags: 1
   m_ColliderType: 1
-  Type: 0
+  Type: 2
   Prefab: {fileID: 5969827260605884048, guid: d719ed316ff59c440984ec23be855689, type: 3}
   TempRate: 3
   HungerRate: 3

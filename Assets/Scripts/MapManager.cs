@@ -7,6 +7,8 @@ using UnityEngine.WSA;
 
 public class MapManager : MonoBehaviour
 {
+    [SerializeField] private bool EnableGeneration = true;
+
     [Header("CONFIGURE THRESHOLDS FOR THE AMOUNT OF RESOURCES")]
     [SerializeField] private float VeryLowValue;
     [SerializeField] private float LowValue;
@@ -52,9 +54,12 @@ public class MapManager : MonoBehaviour
             random = new System.Random();
         }*/
 
-
-        PopulateTileArray();
-        PopulateMap();
+        if(EnableGeneration)
+        {
+            PopulateTileArray();
+            PopulateMap();
+        }
+        
 
         //GameManager.Instance.Elephant.SetActive(false);
         // GameManager.Instance.Human.SetActive(false);
