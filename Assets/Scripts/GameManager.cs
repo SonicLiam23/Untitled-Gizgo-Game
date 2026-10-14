@@ -100,6 +100,9 @@ public class GameManager : MonoBehaviour
         characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
 
+
+        InputActionsManager.Init();
+
         StartCoroutine(HungerCoroutine());
         StartCoroutine(TempCoroutine());
     }

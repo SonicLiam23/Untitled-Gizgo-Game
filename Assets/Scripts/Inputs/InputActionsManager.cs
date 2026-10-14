@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputActionsManager : MonoBehaviour
+public class InputActionsManager
 {
     public static InputActionsManager Instance { get; private set; } = null;
 
@@ -10,27 +10,27 @@ public class InputActionsManager : MonoBehaviour
     public InputSystem_Actions InputActions { get; private set; }
     public Vector3 MovementInput;
 
-    private void Awake()
+    private InputActionsManager()
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
         InputActions = new InputSystem_Actions();
         InputActions.Player.Enable();
         characterController = new();
     }
 
-    private void Start()
+    public static void Init()
     {
-        characterController[CHARACTER.ELEPHANT] = GameManager.Instance.Elephant.GetComponent<CharacterControls>();
-        characterController[CHARACTER.HUMAN] = GameManager.Instance.Human.GetComponent<CharacterControls>();
-        characterController[CHARACTER.ELEPHANT].enabled = false;
-        characterController[CHARACTER.HUMAN].enabled = true;
-        InputActions.Player.SetCallbacks(characterController[CHARACTER.HUMAN]);
+        if (Instance != null)
+        {
+            return;
+        }
+
+        Instance = new InputActionsManager();
+
+        Instance.characterController[CHARACTER.ELEPHANT] = GameManager.Instance.Elephant.GetComponent<CharacterControls>();
+        Instance.characterController[CHARACTER.HUMAN] = GameManager.Instance.Human.GetComponent<CharacterControls>();
+        Instance.characterController[CHARACTER.ELEPHANT].enabled = false;
+        Instance.characterController[CHARACTER.HUMAN].enabled = true;
+        Instance.InputActions.Player.SetCallbacks(Instance.characterController[CHARACTER.HUMAN]);
     }
 
     public void SwitchCharacter(CurrentCharacter character)
