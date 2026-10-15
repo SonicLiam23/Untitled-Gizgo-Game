@@ -18,8 +18,8 @@ public class ItemsConfig : ScriptableObject
     [Serializable]
     public class ItemEntry
     {
-        public ItemType type;
-        public GameObject prefab;
+        public ItemType Type;
+        public GameObject Prefab;
     }
 
     [SerializeField] public ItemEntry[] items;
@@ -29,7 +29,7 @@ public class ItemsConfig : ScriptableObject
 
         foreach (ItemEntry item in items)
         {
-            if (type == item.type)
+            if (type == item.Type)
             {
                 return item;
             }
