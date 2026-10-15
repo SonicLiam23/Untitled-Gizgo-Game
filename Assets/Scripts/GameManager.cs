@@ -37,9 +37,6 @@ public class GameManager : MonoBehaviour
     public GameObject Human => CharacterObject[(int)CHARACTER.HUMAN];
 
     public float HumanElephantDistance { get; private set; }
-
-    public bool IsCampfireLit;
-    public bool IsCampfireActive;
  
     private bool isFollowActive = true;
     public bool CanSwitchOverride = true;
@@ -165,6 +162,7 @@ public class GameManager : MonoBehaviour
 
         characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
+        
     }
 
     public void RestoreHunger(float pointsToRestore)
@@ -179,7 +177,8 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(3f);
 
-            characterHunger[ActiveCharacter.type] = Mathf.Max(characterHunger[ActiveCharacter.type] - hungerToReduce, 0f);
+            characterHunger[CHARACTER.HUMAN] = Mathf.Max(characterHunger[CHARACTER.HUMAN] - 1f, 0f);
+            characterHunger[CHARACTER.ELEPHANT] = Mathf.Max(characterHunger[CHARACTER.ELEPHANT] - 1f, 0f);
         }
     }
 
@@ -197,43 +196,37 @@ public class GameManager : MonoBehaviour
 
     IEnumerator TempCoroutine()
     {
+        float waitingTime = 3f;
         while (true)
         {
-            float waitingTime = 3f;
-
-            if (ActiveCharacter.type == CHARACTER.HUMAN && HumanElephantDistance <= 5f)
-            {
-                waitingTime = 5f;
-            }
-
-            if(IsCampfireActive)
-            {
-                waitingTime = 2f;
-            }
-
             yield return new WaitForSeconds(waitingTime);
 
-            if(IsCampfireActive && IsCampfireLit)
+            if (characterCore[CHARACTER.HUMAN].InLitCampfireRadius)
             {
-                if(characterTemp[ActiveCharacter.type] <= characterStat[ActiveCharacter.type].MaxTemperature)
-                {
-                    characterTemp[ActiveCharacter.type] += 2;
-                }
+                characterTemp[CHARACTER.HUMAN] = Mathf.Min(characterTemp[CHARACTER.HUMAN] + 2f, characterStat[CHARACTER.HUMAN].MaxTemperature);
 
             }
             else
             {
-                characterTemp[ActiveCharacter.type] = Mathf.Max(characterTemp[ActiveCharacter.type] - tempToReduce, 0f);
+                characterTemp[CHARACTER.HUMAN] = Mathf.Max(characterTemp[CHARACTER.HUMAN] - 1f, 0f);
             }
 
-            if (!isACharacterFrozen && characterTemp[ActiveCharacter.type] <= 0f)
+
+            if (characterCore[CHARACTER.ELEPHANT].InLitCampfireRadius)
             {
-                isACharacterFrozen = true;
-                ForceSwitch();
+
+                characterTemp[CHARACTER.ELEPHANT] = Mathf.Min(characterTemp[CHARACTER.ELEPHANT] + 2f, characterStat[CHARACTER.ELEPHANT].MaxTemperature);
+
             }
-            if (isACharacterFrozen && characterTemp[OtherCharacter.type] > 0f)
+            else
             {
-                isACharacterFrozen = false;
+                characterTemp[CHARACTER.ELEPHANT] = Mathf.Max(characterTemp[CHARACTER.ELEPHANT] - 1f, 0f);
+            }
+
+            // the jankiest, most horrible solution ever. But... it works...
+            if (ActiveCharacter.type == CHARACTER.HUMAN && HumanElephantDistance <= 5f)
+            {
+                characterTemp[CHARACTER.HUMAN] += 0.5f;
             }
         }
     }
