@@ -31,14 +31,14 @@ MonoBehaviour:
     e31: 0
     e32: 0
     e33: 1
-  m_InstancedGameObject: {fileID: 5969827260605884048, guid: d719ed316ff59c440984ec23be855689, type: 3}
+  m_InstancedGameObject: {fileID: 2644530286363867325, guid: 25303e72fb9beba478f9831b7a955d96, type: 3}
   m_Flags: 1
   m_ColliderType: 1
   Type: 2
-  Prefab: {fileID: 5969827260605884048, guid: d719ed316ff59c440984ec23be855689, type: 3}
+  Prefab: {fileID: 2644530286363867325, guid: 25303e72fb9beba478f9831b7a955d96, type: 3}
   TempRate: 3
   HungerRate: 3
-  FoodResource: 4
+  FoodResource: 3
   SticksResource: 4
   CampfiresResource: 1
   Trees: 4
