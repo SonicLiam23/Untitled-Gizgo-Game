@@ -197,18 +197,20 @@ public class GameManager : MonoBehaviour
     IEnumerator TempCoroutine()
     {
         float waitingTime = 3f;
+
         while (true)
         {
             yield return new WaitForSeconds(waitingTime);
+            ITimeState timeState = DayCycleStateMachine.Instance.CurrentState;
+            float tempRate = tempToReduce + timeState.TempRate;
 
             if (characterCore[CHARACTER.HUMAN].InLitCampfireRadius)
             {
                 characterTemp[CHARACTER.HUMAN] = Mathf.Min(characterTemp[CHARACTER.HUMAN] + 2f, characterStat[CHARACTER.HUMAN].MaxTemperature);
-
             }
             else
             {
-                characterTemp[CHARACTER.HUMAN] = Mathf.Max(characterTemp[CHARACTER.HUMAN] - 1f, 0f);
+                characterTemp[CHARACTER.HUMAN] = Mathf.Max(characterTemp[CHARACTER.HUMAN] - tempRate, 0f);
             }
 
 
@@ -220,7 +222,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                characterTemp[CHARACTER.ELEPHANT] = Mathf.Max(characterTemp[CHARACTER.ELEPHANT] - 1f, 0f);
+                characterTemp[CHARACTER.ELEPHANT] = Mathf.Max(characterTemp[CHARACTER.ELEPHANT] - tempRate, 0f);
             }
 
             // the jankiest, most horrible solution ever. But... it works...

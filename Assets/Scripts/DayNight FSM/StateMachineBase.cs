@@ -24,7 +24,7 @@ public abstract class StateMachineBase<TState, TMachine> : MonoBehaviour
             CurrentState.OnEnter();
         }
         catch
-        {
+        { 
             Debug.LogError("Error changing state, likely invalid state type.");
         }
     }

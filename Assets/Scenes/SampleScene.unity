@@ -148,17 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3431c0d0aa5df3438b6ddfa13d4edbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapGenerator
-  mapWidth: 300
-  mapDepth: 300
-  floorContainer: {fileID: 1507493111}
-  wallContainer: {fileID: 1804117312}
-  interactablesContainer: {fileID: 817660726}
-  biomeConfig: {fileID: 11400000, guid: 7215614f64bd4fa479ef578643339e64, type: 2}
-  itemConfig: {fileID: 11400000, guid: 66c8568aff11d0348b8f7087726d9837, type: 2}
-  mapEdgePrefab: {fileID: 4472257562010444675, guid: 5b2448906322cee4db5038c89826031a, type: 3}
-  wobbleAmount: 8
-  magnitude: 0.05
-  seed: 0
 --- !u!4 &8952470
 Transform:
   m_ObjectHideFlags: 0
@@ -296,7 +285,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae355667f94fc9d4a8ef3752cacfe900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputActionsManager
-  MovementInput: {x: 0, y: 0, z: 0}
 --- !u!4 &266886586
 Transform:
   m_ObjectHideFlags: 0
@@ -485,6 +473,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a4e403e36a06745940c4e542b63cdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterCore
+  InLitCampfireRadius: 0
+  HeatLossGainEnabled: 1
+  TempLossEnabled: 1
 --- !u!114 &267178459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -860,6 +851,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a4e403e36a06745940c4e542b63cdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterCore
+  InLitCampfireRadius: 0
+  HeatLossGainEnabled: 1
+  TempLossEnabled: 1
 --- !u!114 &363401827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -874,6 +868,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ElephantController
   MovementSpeed: 5
   rotationSpeed: 20
+  baseMaxVelocity: 2
+  maxVelocityCap: 10
+  sprintStep: 2
+  acceleration: 3
+  deceleration: 4
+  boostStep: 2
+  maxBoost: 8
+  decayRate: 2
+  reverseMaxVelocity: 2
 --- !u!114 &363401828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1091,10 +1094,12 @@ MonoBehaviour:
   CharacterObject:
   - {fileID: 267178450}
   - {fileID: 363401818}
+  HoveringFoodSlider: []
+  HoveringTempSlider: []
   temperatureSlider: {fileID: 128017326}
   hungerSlider: {fileID: 1259618787}
-  IsCampfireLit: 0
-  IsCampfireActive: 0
+  CanSwitchOverride: 1
+  mapManager: {fileID: 0}
   camera: {fileID: 330585548}
 --- !u!4 &522882068
 Transform:
