@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
     private float tempToReduce;
     private float hungerToReduce;
 
+    [SerializeField] private float CampfireTempIncrease;
+
     [SerializeField] private MapManager mapManager;
     [SerializeField] private CameraAdjust camera;
 
@@ -201,12 +203,11 @@ public class GameManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(waitingTime);
-            ITimeState timeState = DayCycleStateMachine.Instance.CurrentState;
-            float tempRate = tempToReduce + timeState.TempRate;
+            float tempRate = tempToReduce + DayCycleStateMachine.Instance.CurrentState.TempRate;
 
             if (characterCore[CHARACTER.HUMAN].InLitCampfireRadius)
             {
-                characterTemp[CHARACTER.HUMAN] = Mathf.Min(characterTemp[CHARACTER.HUMAN] + 2f, characterStat[CHARACTER.HUMAN].MaxTemperature);
+                characterTemp[CHARACTER.HUMAN] = Mathf.Min(characterTemp[CHARACTER.HUMAN] + CampfireTempIncrease, characterStat[CHARACTER.HUMAN].MaxTemperature);
             }
             else
             {
@@ -217,7 +218,7 @@ public class GameManager : MonoBehaviour
             if (characterCore[CHARACTER.ELEPHANT].InLitCampfireRadius)
             {
 
-                characterTemp[CHARACTER.ELEPHANT] = Mathf.Min(characterTemp[CHARACTER.ELEPHANT] + 2f, characterStat[CHARACTER.ELEPHANT].MaxTemperature);
+                characterTemp[CHARACTER.ELEPHANT] = Mathf.Min(characterTemp[CHARACTER.ELEPHANT] + CampfireTempIncrease, characterStat[CHARACTER.ELEPHANT].MaxTemperature);
 
             }
             else
@@ -228,7 +229,7 @@ public class GameManager : MonoBehaviour
             // the jankiest, most horrible solution ever. But... it works...
             if (ActiveCharacter.type == CHARACTER.HUMAN && HumanElephantDistance <= 5f)
             {
-                characterTemp[CHARACTER.HUMAN] += 0.5f;
+                characterTemp[CHARACTER.HUMAN] = Mathf.Min(characterTemp[CHARACTER.HUMAN] + 0.5f, characterStat[CHARACTER.HUMAN].MaxTemperature);
             }
         }
     }

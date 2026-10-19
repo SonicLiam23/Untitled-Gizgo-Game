@@ -5,11 +5,9 @@ public class TimerScirpt : MonoBehaviour
 {
   public TextMeshProUGUI timerText;
     public float timeRemaining;
-    ITimeState timeState;
     void Start()
     {
-        timeState = DayCycleStateMachine.Instance.CurrentState;
-        timeRemaining = timeState.StateDuration;
+        timeRemaining = DayCycleStateMachine.Instance.CurrentState.StateDuration;
     }
     void Update()
     {
@@ -27,7 +25,6 @@ public class TimerScirpt : MonoBehaviour
         }
     }
 
-    //IM NOT SURE IF THERE IS A BETTER WAY TO DO THIS RIGHT NOW, IF THERE IS LET ME KNOW
     void timerEnded()
     {
         //Change State
@@ -44,8 +41,7 @@ public class TimerScirpt : MonoBehaviour
             DayCycleStateMachine.Instance.ChangeState(typeof(MorningState));
         }
 
-        timeState = DayCycleStateMachine.Instance.CurrentState;
-        timeRemaining = timeState.StateDuration;
+        timeRemaining = DayCycleStateMachine.Instance.CurrentState.StateDuration;
 
         // Time.timeScale = 0f;
     }

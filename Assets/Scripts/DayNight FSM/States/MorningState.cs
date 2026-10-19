@@ -3,24 +3,24 @@ using UnityEngine;
 public class MorningState : ITimeState
 {
 
-    public float TempRate => 0f;
+    public float TempRate => 1f;
     public float StateDuration => 60f;
     public void OnEnter()
     {
         Debug.LogError("Entered Morning State");
 
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public void OnExit()
     {
         Debug.LogError("Exited Morning State");
 
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public void UpdateState()
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 }

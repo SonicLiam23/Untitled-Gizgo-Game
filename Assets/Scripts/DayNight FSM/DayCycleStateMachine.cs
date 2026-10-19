@@ -19,6 +19,7 @@ public class DayCycleStateMachine : StateMachineBase<ITimeState, DayCycleStateMa
             Debug.LogWarning("You have multiple instances of the time cycle state machine. Disabling this one");
         }
 
+        Instance = this;
         // initialize the state dict!
         states = new Dictionary<Type, ITimeState>
         {

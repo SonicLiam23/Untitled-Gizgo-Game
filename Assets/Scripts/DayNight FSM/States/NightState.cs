@@ -10,7 +10,7 @@ public class NightState : ITimeState
 
         Debug.LogError("Entered Night State");
 
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
 
 
     }
@@ -19,11 +19,11 @@ public class NightState : ITimeState
     {
         Debug.LogError("Exited Night State");
 
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public void UpdateState()
     {
-        throw new System.NotImplementedException();
+       // throw new System.NotImplementedException();
     }
 }

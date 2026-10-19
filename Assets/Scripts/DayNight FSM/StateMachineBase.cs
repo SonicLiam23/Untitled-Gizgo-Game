@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-public abstract class StateMachineBase<TState, TMachine> : MonoBehaviour 
+public abstract class StateMachineBase<TState, TMachine> : MonoBehaviour
     where TState : IState
 {
     public TState CurrentState { get; protected set; }
@@ -24,7 +24,7 @@ public abstract class StateMachineBase<TState, TMachine> : MonoBehaviour
             CurrentState.OnEnter();
         }
         catch
-        { 
+        {
             Debug.LogError("Error changing state, likely invalid state type.");
         }
     }
