@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.qiaozhilei.easy-text-effects": {
+      "version": "https://github.com/LeiQiaoZhi/Easy-Text-Effect.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
+      "hash": "102249bba7e95ec4f3c3cfbaf4f0afd9b1b4ccce"
+    },
     "com.unity.2d.tilemap": {
       "version": "1.0.0",
       "depth": 0,
@@ -109,6 +118,13 @@
     "com.unity.nuget.mono-cecil": {
       "version": "1.11.6",
       "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.2",
+      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
