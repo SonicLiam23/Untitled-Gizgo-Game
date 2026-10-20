@@ -5,7 +5,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActions
 {
-    public float MovementSpeed = 5f;
+    public float DefaultMovementSpeed = 5f;
+    public float ChangeInMovementSpeed = 0f;
     protected Rigidbody rb;
 
     CharacterCore characterCore;
@@ -15,6 +16,7 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
         rb = GetComponent<Rigidbody>();
         characterCore = GetComponent<CharacterCore>();
     }
+
 
     public void OnAttack(InputAction.CallbackContext context)
     {
@@ -60,6 +62,7 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
     public virtual void OnMove(InputAction.CallbackContext context)
     {
         Vector2 movementInput = context.ReadValue<Vector2>();
+        float MovementSpeed = DefaultMovementSpeed + ChangeInMovementSpeed;
         InputActionsManager.Instance.MovementInput = new Vector3(movementInput.x, 0, movementInput.y) * MovementSpeed;
         
     }

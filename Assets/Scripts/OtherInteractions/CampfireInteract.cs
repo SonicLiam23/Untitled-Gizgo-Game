@@ -43,6 +43,11 @@ public class CampfireInteract : MonoBehaviour, IInteractable
             ScoreManager.Instance.RemoveSticks(sticksToLight);
             GetComponent<Renderer>().material = litMaterial;
             isLit = true;
+
+            if(interacter.TryGetComponent<CharacterCore>(out CharacterCore player))
+            {
+                player.InLitCampfireRadius = true;
+            }
         }
     }
 }

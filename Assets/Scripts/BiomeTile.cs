@@ -24,6 +24,7 @@ public class BiomeTile : Tile
     public GameObject Prefab;
     public float TempRate;
     public float HungerRate;
+    public float PlayerSpeedChange;
     public AmountOfResources FoodResource;
     public AmountOfResources SticksResource;
     public AmountOfResources CampfiresResource;

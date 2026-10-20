@@ -38,6 +38,7 @@ MonoBehaviour:
   Prefab: {fileID: 2644530286363867325, guid: 9414260b9d3090a4fbcc7730427fd223, type: 3}
   TempRate: 1
   HungerRate: 1
+  PlayerSpeedChange: 2
   FoodResource: 0
   SticksResource: 1
   CampfiresResource: 0
