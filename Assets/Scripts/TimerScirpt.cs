@@ -65,8 +65,15 @@ public class TimerScirpt : MonoBehaviour
         }
 
         //Visual linear rotation of the sun and moon based on the current time
-        sun.transform.eulerAngles = (time - 0.25f) * Afternoon * 4.0f;
-        moon.transform.eulerAngles = (time - 0.75f) * Afternoon * 4.0f;
+
+        //sun.trasnform.eulerAngles = (time - 0.25f) * Afternoon * 4.0f;
+        //moon.transform.eulerAngles = (time - 0.75f) * Afternoon * 4.0f;
+
+        float sunRotationAngle = (time / 0.9f) * 180f;
+        sun.transform.localRotation = Quaternion.Euler(sunRotationAngle, 0, 0);
+
+        float moonRotationAngle = ((time - 0.9f) / 0.1f) * 180f;
+        moon.transform.localRotation = Quaternion.Euler(moonRotationAngle, 0, 0);
         sun.color = sunColour.Evaluate(time);
         moon.color = moonColour.Evaluate(time);
 
