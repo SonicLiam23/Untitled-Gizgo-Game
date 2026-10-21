@@ -9,6 +9,7 @@ public class CampfireInteract : MonoBehaviour, IInteractable
     [SerializeField] Material unlitMaterial;
     bool isLit;
     [SerializeField] private int sticksToLight = 0;
+    [SerializeField] private GameObject particle;
 
     private void Start()
     {
@@ -42,6 +43,7 @@ public class CampfireInteract : MonoBehaviour, IInteractable
         {
             ScoreManager.Instance.RemoveSticks(sticksToLight);
             GetComponent<Renderer>().material = litMaterial;
+            particle.SetActive(true);
             isLit = true;
 
             if(interacter.TryGetComponent<CharacterCore>(out CharacterCore player))

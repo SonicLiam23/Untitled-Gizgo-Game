@@ -405,6 +405,7 @@ MonoBehaviour:
   litMaterial: {fileID: 2100000, guid: 5d7605baa4709364e87f6bb16736194c, type: 2}
   unlitMaterial: {fileID: 2100000, guid: df77a8970a528b24ba97b0e8082a038a, type: 2}
   sticksToLight: 2
+  particle: {fileID: 8519028105351503629}
 --- !u!114 &-6007682718678940563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -601,7 +602,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 189966335923932724, guid: f82b29eb603504b4fa68e8be22dd6d16, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 189966335923932724, guid: f82b29eb603504b4fa68e8be22dd6d16, type: 3}
       propertyPath: m_LocalPosition.z
@@ -651,5 +652,10 @@ PrefabInstance:
 --- !u!4 &5578599075297991086 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 189966335923932724, guid: f82b29eb603504b4fa68e8be22dd6d16, type: 3}
+  m_PrefabInstance: {fileID: 5749354192157464474}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8519028105351503629 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4174948730760939671, guid: f82b29eb603504b4fa68e8be22dd6d16, type: 3}
   m_PrefabInstance: {fileID: 5749354192157464474}
   m_PrefabAsset: {fileID: 0}
