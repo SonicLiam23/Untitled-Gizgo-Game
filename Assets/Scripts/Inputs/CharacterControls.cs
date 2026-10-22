@@ -8,6 +8,7 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
     public float DefaultMovementSpeed = 5f;
     public float ChangeInMovementSpeed = 0f;
     protected Rigidbody rb;
+    protected bool isMoving;
 
     CharacterCore characterCore;
 
@@ -61,20 +62,33 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
 
     public virtual void OnMove(InputAction.CallbackContext context)
     {
+        if (context.started)
+        {
+            isMoving = true;
+        }    
+        else if (context.canceled)
+        {
+            isMoving = false;
+        }
+
+
         Vector2 movementInput = context.ReadValue<Vector2>();
         float MovementSpeed = DefaultMovementSpeed + ChangeInMovementSpeed;
         InputActionsManager.Instance.MovementInput = new Vector3(movementInput.x, 0, movementInput.y) * MovementSpeed;
-        
     }
 
     public void OnNext(InputAction.CallbackContext context)
     {
+        if (context.started)
+        {
+            GameManager.Instance.ExitMinigame();
+        }
         
     }
 
     public void OnPrevious(InputAction.CallbackContext context)
     {
-        
+        if (context.started) GameManager.Instance.EnterMinigame();
     }
 
     public void OnSprint(InputAction.CallbackContext context)
@@ -86,6 +100,6 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
 
     protected virtual void FixedUpdate()
     {
-        rb.linearVelocity = new Vector3(InputActionsManager.Instance.MovementInput.x, rb.linearVelocity.y, InputActionsManager.Instance.MovementInput.z);
+        if (isMoving) rb.linearVelocity = new Vector3(InputActionsManager.Instance.MovementInput.x, rb.linearVelocity.y, InputActionsManager.Instance.MovementInput.z);
     }
 }

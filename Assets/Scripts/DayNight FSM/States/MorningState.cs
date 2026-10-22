@@ -7,14 +7,14 @@ public class MorningState : ITimeState
     public float StateDuration => 90f;
     public void OnEnter()
     {
-        Debug.LogError("Entered Morning State");
+        Debug.Log("Entered Morning State");
 
         //throw new System.NotImplementedException();
     }
 
     public void OnExit()
     {
-        Debug.LogError("Exited Morning State");
+        Debug.Log("Exited Morning State");
 
         //throw new System.NotImplementedException();
     }

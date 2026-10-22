@@ -1,7 +1,9 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -52,6 +54,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private MapManager mapManager;
     [SerializeField] private CameraAdjust camera;
+    [SerializeField] private TimerScirpt dayNightTimer;
+
+    private IEnumerator hungerCoroutine;
+    private IEnumerator tempCoroutine;
+    private bool inMinigame;
 
     private void Awake()
     {
@@ -61,11 +68,13 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+
         Instance = this;
         characterStat = new();
         characterTemp = new();
         characterHunger = new();
         characterCore = new();
+
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -104,8 +113,14 @@ public class GameManager : MonoBehaviour
 
         InputActionsManager.Init();
 
-        StartCoroutine(HungerCoroutine());
-        StartCoroutine(TempCoroutine());
+        hungerCoroutine = HungerCoroutine();
+        tempCoroutine = TempCoroutine();
+
+        inMinigame = false;
+
+        StartCoroutine(hungerCoroutine);
+        StartCoroutine(tempCoroutine);
+
     }
 
     private void Update()
@@ -169,6 +184,36 @@ public class GameManager : MonoBehaviour
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
         
     }
+
+    public void EnterMinigame()
+    {
+        if (inMinigame) return;
+
+        inMinigame = true;
+        StopCoroutine(hungerCoroutine);
+        StopCoroutine(tempCoroutine);
+        // disables the UI, jank asf i actually really hate this, but it works.
+        temperatureSlider.transform.parent.gameObject.SetActive(false);
+        HoveringFoodSlider[0].transform.parent.gameObject.SetActive(false);
+        HoveringFoodSlider[1].transform.parent.gameObject.SetActive(false);
+        dayNightTimer.SetTimePasses(false);
+
+    }
+
+    public void ExitMinigame()
+    {
+        if (!inMinigame) return;
+        
+        inMinigame = false;
+        StartCoroutine(hungerCoroutine);
+        StartCoroutine(tempCoroutine);
+        // disables the UI, jank asf i actually really hate this, but it works.
+        temperatureSlider.transform.parent.gameObject.SetActive(true); 
+        HoveringFoodSlider[0].transform.parent.gameObject.SetActive(true);
+        HoveringFoodSlider[1].transform.parent.gameObject.SetActive(true);
+        dayNightTimer.SetTimePasses(true);
+    }
+
 
     public void RestoreHunger(float pointsToRestore)
     {
@@ -236,7 +281,7 @@ public class GameManager : MonoBehaviour
             }
 
 
-            if (characterTemp[CHARACTER.HUMAN] <= 0f || characterTemp[CHARACTER.ELEPHANT] <= 0f)
+            if (CanSwitchOverride && (characterTemp[CHARACTER.HUMAN] <= 0f || characterTemp[CHARACTER.ELEPHANT] <= 0f))
             {
                 CanSwitchOverride = false;
                 ForceSwitch();
@@ -252,10 +297,12 @@ public class GameManager : MonoBehaviour
 
             if (characterTemp[CHARACTER.HUMAN] <= 0f && characterTemp[CHARACTER.ELEPHANT] <= 0f)
             {
-                string currentSceneName = SceneManager.GetActiveScene().name;
-                SceneManager.LoadScene(currentSceneName);
+                SceneManager.LoadScene("MainMenu");
             }
         }
+
+        
+
     }
 
 

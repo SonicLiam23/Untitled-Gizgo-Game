@@ -40,7 +40,6 @@ public class TimerScirpt : MonoBehaviour
     private float stateDuration;
     public float timeRemaining;
 
-
     void Start()
     {
         stateDuration = DayCycleStateMachine.Instance.CurrentState.StateDuration;
@@ -129,5 +128,10 @@ public class TimerScirpt : MonoBehaviour
         timeRemaining = DayCycleStateMachine.Instance.CurrentState.StateDuration;
 
         // Time.timeScale = 0f;
+    }
+
+    public void SetTimePasses(bool shouldTimePass)
+    {
+        enabled = shouldTimePass;
     }
 }

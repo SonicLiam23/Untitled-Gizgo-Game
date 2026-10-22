@@ -34,6 +34,7 @@ public class ElephantController : CharacterControls
         // Add a boost only on input start (button/stick press)
         if (context.started)
         {
+            isMoving = true;
             if (movementInput.y > 0f)
             {
                 if (boostSpeed < 0f) boostSpeed = 0f; // reset if switching direction
@@ -44,6 +45,10 @@ public class ElephantController : CharacterControls
                 if (boostSpeed > 0f) boostSpeed = 0f;
                 boostSpeed = Mathf.Max(boostSpeed - boostStep, -maxBoost);
             }
+        }
+        else if (context.canceled)
+        {
+            isMoving = false;
         }
 
         // rotation same as before
