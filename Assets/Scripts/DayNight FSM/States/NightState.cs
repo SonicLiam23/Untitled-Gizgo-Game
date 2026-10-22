@@ -3,7 +3,7 @@ using UnityEngine;
 public class NightState : ITimeState
 {
     public float TempRate => 2f;
-    public float StateDuration => 60f;
+    public float StateDuration => 20f;
     public void OnEnter()
     {
 
