@@ -4,7 +4,7 @@ public class MorningState : ITimeState
 {
 
     public float TempRate => 1f;
-    public float StateDuration => 60f;
+    public float StateDuration => 90f;
     public void OnEnter()
     {
         Debug.LogError("Entered Morning State");

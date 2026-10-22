@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
     private float tempToReduce;
     private float hungerToReduce;
 
+    private float speedChange;
+
     [SerializeField] private float CampfireTempIncrease;
 
     [SerializeField] private MapManager mapManager;
@@ -66,8 +68,7 @@ public class GameManager : MonoBehaviour
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-    {
-
+    { 
         characterStat[CHARACTER.ELEPHANT] = Elephant.GetComponent<CharacterStats>();
         characterStat[CHARACTER.HUMAN] = Human.GetComponent<CharacterStats>();
 
@@ -129,6 +130,7 @@ public class GameManager : MonoBehaviour
         {
             tempToReduce = tile.TempRate;
             hungerToReduce = tile.HungerRate;
+            characterCore[ActiveCharacter.type].Controls.ChangeInMovementSpeed = tile.PlayerSpeedChange; 
         }
 
 

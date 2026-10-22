@@ -14,6 +14,8 @@ public class BiomeConfig : ScriptableObject
         //public float DistanceFromPath;
         public float TempRate;
         public float HungerRate;
+
+        public float PlayerSpeedIncrease;
     }
 
     [SerializeField] public BiomeEntry[] biomes;
