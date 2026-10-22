@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum CHARACTER
@@ -209,29 +210,50 @@ public class GameManager : MonoBehaviour
 
             if (characterCore[CHARACTER.HUMAN].InLitCampfireRadius)
             {
-                characterTemp[CHARACTER.HUMAN] = Mathf.Min(characterTemp[CHARACTER.HUMAN] + CampfireTempIncrease, characterStat[CHARACTER.HUMAN].MaxTemperature);
+                characterTemp[CHARACTER.HUMAN] += CampfireTempIncrease;
             }
             else
             {
-                characterTemp[CHARACTER.HUMAN] = Mathf.Max(characterTemp[CHARACTER.HUMAN] - tempRate, 0f);
+                characterTemp[CHARACTER.HUMAN] -= tempRate;
             }
+            characterTemp[CHARACTER.HUMAN] = Mathf.Clamp(characterTemp[CHARACTER.HUMAN], 0f, characterStat[CHARACTER.HUMAN].MaxTemperature);
 
 
             if (characterCore[CHARACTER.ELEPHANT].InLitCampfireRadius)
             {
-
-                characterTemp[CHARACTER.ELEPHANT] = Mathf.Min(characterTemp[CHARACTER.ELEPHANT] + CampfireTempIncrease, characterStat[CHARACTER.ELEPHANT].MaxTemperature);
-
+                characterTemp[CHARACTER.ELEPHANT] += CampfireTempIncrease;
             }
             else
             {
-                characterTemp[CHARACTER.ELEPHANT] = Mathf.Max(characterTemp[CHARACTER.ELEPHANT] - tempRate, 0f);
+                characterTemp[CHARACTER.ELEPHANT] -= tempRate;
             }
+            characterTemp[CHARACTER.ELEPHANT] = Mathf.Clamp(characterTemp[CHARACTER.ELEPHANT], 0f, characterStat[CHARACTER.ELEPHANT].MaxTemperature);
 
             // the jankiest, most horrible solution ever. But... it works...
             if (ActiveCharacter.type == CHARACTER.HUMAN && HumanElephantDistance <= 5f)
             {
                 characterTemp[CHARACTER.HUMAN] = Mathf.Min(characterTemp[CHARACTER.HUMAN] + 0.5f, characterStat[CHARACTER.HUMAN].MaxTemperature);
+            }
+
+
+            if (characterTemp[CHARACTER.HUMAN] <= 0f || characterTemp[CHARACTER.ELEPHANT] <= 0f)
+            {
+                CanSwitchOverride = false;
+                ForceSwitch();
+            }
+
+            if (!CanSwitchOverride)
+            {
+                if (characterTemp[OtherCharacter.type] > 0f)
+                {
+                    CanSwitchOverride = true;
+                }
+            }
+
+            if (characterTemp[CHARACTER.HUMAN] <= 0f && characterTemp[CHARACTER.ELEPHANT] <= 0f)
+            {
+                string currentSceneName = SceneManager.GetActiveScene().name;
+                SceneManager.LoadScene(currentSceneName);
             }
         }
     }
