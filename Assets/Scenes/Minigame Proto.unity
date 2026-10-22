@@ -3686,6 +3686,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1149739761877898501, guid: e2c40ce516c2a884ab8cccdbf39169f0, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: b17db0f845a87a14db4d1546b5c62cd6, type: 2}
     - target: {fileID: 3590328966683382602, guid: e2c40ce516c2a884ab8cccdbf39169f0, type: 3}
       propertyPath: m_Name
       value: Plant Physics (4)
@@ -6068,6 +6072,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1149739761877898501, guid: e2c40ce516c2a884ab8cccdbf39169f0, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: b17db0f845a87a14db4d1546b5c62cd6, type: 2}
     - target: {fileID: 3590328966683382602, guid: e2c40ce516c2a884ab8cccdbf39169f0, type: 3}
       propertyPath: m_Name
       value: Plant Physics (1)
@@ -6257,6 +6265,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1149739761877898501, guid: e2c40ce516c2a884ab8cccdbf39169f0, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: b17db0f845a87a14db4d1546b5c62cd6, type: 2}
     - target: {fileID: 3590328966683382602, guid: e2c40ce516c2a884ab8cccdbf39169f0, type: 3}
       propertyPath: m_Name
       value: Plant Physics
@@ -8650,6 +8662,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1149739761877898501, guid: e2c40ce516c2a884ab8cccdbf39169f0, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: b17db0f845a87a14db4d1546b5c62cd6, type: 2}
     - target: {fileID: 3590328966683382602, guid: e2c40ce516c2a884ab8cccdbf39169f0, type: 3}
       propertyPath: m_Name
       value: Plant Physics (2)
@@ -8717,6 +8733,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1149739761877898501, guid: e2c40ce516c2a884ab8cccdbf39169f0, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: b17db0f845a87a14db4d1546b5c62cd6, type: 2}
     - target: {fileID: 3590328966683382602, guid: e2c40ce516c2a884ab8cccdbf39169f0, type: 3}
       propertyPath: m_Name
       value: Plant Physics (3)
