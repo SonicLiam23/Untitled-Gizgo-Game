@@ -20,12 +20,13 @@ public class GameManager : MonoBehaviour
 {
     // PUBLIC/API
     public static GameManager Instance { get; private set; } = null;
-    public CurrentCharacter ActiveCharacter { get; private set; } = new();
-    public CurrentCharacter OtherCharacter { get; private set; } = new();
+    public CurrentCharacter ActiveCharacter { get; private set; }
+    public CurrentCharacter OtherCharacter { get; private set; }
     public GameObject Elephant { get; private set; }
     public GameObject Human { get; private set; }
     public bool CanSwitchOverride = true;
     public float HumanElephantDistance { get; private set; }
+    public Dictionary<CHARACTER, CharacterCore> characterCore { get; private set; }
 
     // PUBLIC END
 
@@ -33,12 +34,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject[] CharacterObject;
     [SerializeField] private Slider[] HoveringFoodSlider;
     [SerializeField] private Slider[] HoveringTempSlider;
-    private Dictionary<CHARACTER, CharacterCore> characterCore;
-    private Dictionary<CHARACTER, CharacterStats> characterStat;
+    
     [SerializeField] private Slider temperatureSlider;
     [SerializeField] private Slider hungerSlider;
-    private Dictionary<CHARACTER, float> characterTemp;
-    private Dictionary<CHARACTER, float> characterHunger;
     private bool isFollowActive = true;
     private bool isACharacterFrozen = false;
     private float tempToReduce;
@@ -65,9 +63,7 @@ public class GameManager : MonoBehaviour
 
 
         Instance = this;
-        characterStat = new();
-        characterTemp = new();
-        characterHunger = new();
+        characterCore = new();
         characterCore = new();
 
     }
@@ -77,34 +73,23 @@ public class GameManager : MonoBehaviour
         Human = CharacterObject[(int)CHARACTER.HUMAN];
         Elephant = CharacterObject[(int)CHARACTER.ELEPHANT];
 
-        characterStat[CHARACTER.ELEPHANT] = Elephant.GetComponent<CharacterStats>();
-        characterStat[CHARACTER.HUMAN] = Human.GetComponent<CharacterStats>();
-
-        characterTemp[CHARACTER.HUMAN] = characterStat[CHARACTER.HUMAN].MaxTemperature;
-        characterHunger[CHARACTER.HUMAN] = characterStat[CHARACTER.HUMAN].MaxHunger;
-        characterTemp[CHARACTER.ELEPHANT] = characterStat[CHARACTER.ELEPHANT].MaxTemperature;
-        characterHunger[CHARACTER.ELEPHANT] = characterStat[CHARACTER.ELEPHANT].MaxHunger;
-
         characterCore[CHARACTER.HUMAN] = Human.GetComponent<CharacterCore>();
         characterCore[CHARACTER.ELEPHANT] = Elephant.GetComponent<CharacterCore>();
+        ActiveCharacter = new CurrentCharacter(Human, CHARACTER.HUMAN);
+        OtherCharacter = new CurrentCharacter(Elephant, CHARACTER.ELEPHANT);
 
-        ActiveCharacter.type = CHARACTER.HUMAN;
-        ActiveCharacter.gameObject = Human;
         characterCore[CHARACTER.HUMAN].AgentController.enabled = false;
-
-        OtherCharacter.type = CHARACTER.ELEPHANT;
-        OtherCharacter.gameObject = Elephant;
         characterCore[CHARACTER.ELEPHANT].AgentController.enabled = true;
 
 
         camera.SetTarget(ActiveCharacter);
 
-        temperatureSlider.maxValue = characterStat[ActiveCharacter.type].MaxTemperature;
-        hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
-        HoveringFoodSlider[(int)CHARACTER.HUMAN].maxValue = characterStat[CHARACTER.HUMAN].MaxHunger;
-        HoveringTempSlider[(int)CHARACTER.HUMAN].maxValue = characterStat[CHARACTER.HUMAN].MaxTemperature;
-        HoveringFoodSlider[(int)CHARACTER.ELEPHANT].maxValue = characterStat[CHARACTER.ELEPHANT].MaxHunger;
-        HoveringTempSlider[(int)CHARACTER.ELEPHANT].maxValue = characterStat[CHARACTER.ELEPHANT].MaxTemperature;
+        temperatureSlider.maxValue = characterCore[ActiveCharacter.type].MaxTemp;
+        hungerSlider.maxValue = characterCore[ActiveCharacter.type].MaxHunger;
+        HoveringFoodSlider[(int)CHARACTER.HUMAN].maxValue = characterCore[CHARACTER.HUMAN].MaxHunger;
+        HoveringTempSlider[(int)CHARACTER.HUMAN].maxValue = characterCore[CHARACTER.HUMAN].MaxTemp;
+        HoveringFoodSlider[(int)CHARACTER.ELEPHANT].maxValue = characterCore[CHARACTER.ELEPHANT].MaxHunger;
+        HoveringTempSlider[(int)CHARACTER.ELEPHANT].maxValue = characterCore[CHARACTER.ELEPHANT].MaxTemp;
         characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
 
@@ -129,11 +114,11 @@ public class GameManager : MonoBehaviour
     private void FixedUpdate()
     {
 
-        temperatureSlider.value = characterTemp[ActiveCharacter.type];
-        hungerSlider.value = characterHunger[ActiveCharacter.type];
+        temperatureSlider.value = characterCore[ActiveCharacter.type].TempValue;
+        hungerSlider.value = characterCore[ActiveCharacter.type].HungerValue;
 
-        HoveringFoodSlider[(int)OtherCharacter.type].value = characterHunger[OtherCharacter.type];
-        HoveringTempSlider[(int)OtherCharacter.type].value = characterTemp[OtherCharacter.type];
+        HoveringFoodSlider[(int)OtherCharacter.type].value = characterCore[OtherCharacter.type].HungerValue;
+        HoveringTempSlider[(int)OtherCharacter.type].value = characterCore[OtherCharacter.type].TempValue;
 
         characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
 
@@ -175,8 +160,8 @@ public class GameManager : MonoBehaviour
         camera.SetTarget(ActiveCharacter);
         characterCore[OtherCharacter.type].AgentController.SetTarget(ActiveCharacter.gameObject);
 
-        temperatureSlider.maxValue = characterStat[ActiveCharacter.type].MaxTemperature;
-        hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
+        temperatureSlider.maxValue = characterCore[ActiveCharacter.type].MaxTemp;
+        hungerSlider.maxValue = characterCore[ActiveCharacter.type].MaxHunger;
 
         characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
@@ -211,22 +196,14 @@ public class GameManager : MonoBehaviour
         HoveringFoodSlider[1].transform.parent.gameObject.SetActive(true);
         dayNightTimer.SetTimePasses(true);
     }
-
-
-    public void RestoreHunger(float pointsToRestore)
-    {
-
-        characterHunger[ActiveCharacter.type] = Mathf.Min(characterHunger[ActiveCharacter.type] + pointsToRestore, characterStat[ActiveCharacter.type].MaxHunger);
-    }
-
     IEnumerator HungerCoroutine()
     {
         while (true)
         {
             yield return new WaitForSeconds(3f);
 
-            characterHunger[CHARACTER.HUMAN] = Mathf.Max(characterHunger[CHARACTER.HUMAN] - 1f, 0f);
-            characterHunger[CHARACTER.ELEPHANT] = Mathf.Max(characterHunger[CHARACTER.ELEPHANT] - 1f, 0f);
+            characterCore[CHARACTER.HUMAN].RemoveHunger(1f);
+            characterCore[CHARACTER.ELEPHANT].RemoveHunger(1f);
         }
     }
 
@@ -239,7 +216,7 @@ public class GameManager : MonoBehaviour
 
     public bool CanSwitch()
     {
-        return CanSwitchOverride && !(characterTemp[CHARACTER.ELEPHANT] <= 0f || characterTemp[CHARACTER.HUMAN] <= 0f /*|| characterHunger[CHARACTER.ELEPHANT] <= 0f || characterHunger[CHARACTER.HUMAN] <= 0f*/);
+        return CanSwitchOverride && !(characterCore[CHARACTER.ELEPHANT].TempValue <= 0f || characterCore[CHARACTER.HUMAN].TempValue <= 0f);
     }
 
     IEnumerator TempCoroutine()
@@ -253,33 +230,31 @@ public class GameManager : MonoBehaviour
 
             if (characterCore[CHARACTER.HUMAN].InLitCampfireRadius)
             {
-                characterTemp[CHARACTER.HUMAN] += CampfireTempIncrease;
+                characterCore[CHARACTER.HUMAN].RestoreTemp(CampfireTempIncrease);
             }
             else
             {
-                characterTemp[CHARACTER.HUMAN] -= tempRate;
+                characterCore[CHARACTER.HUMAN].RemoveTemp(tempRate);
             }
-            characterTemp[CHARACTER.HUMAN] = Mathf.Clamp(characterTemp[CHARACTER.HUMAN], 0f, characterStat[CHARACTER.HUMAN].MaxTemperature);
 
 
             if (characterCore[CHARACTER.ELEPHANT].InLitCampfireRadius)
             {
-                characterTemp[CHARACTER.ELEPHANT] += CampfireTempIncrease;
+                characterCore[CHARACTER.ELEPHANT].RestoreTemp(CampfireTempIncrease);
             }
             else
             {
-                characterTemp[CHARACTER.ELEPHANT] -= tempRate;
+                characterCore[CHARACTER.ELEPHANT].RemoveTemp(tempRate);
             }
-            characterTemp[CHARACTER.ELEPHANT] = Mathf.Clamp(characterTemp[CHARACTER.ELEPHANT], 0f, characterStat[CHARACTER.ELEPHANT].MaxTemperature);
 
             // the jankiest, most horrible solution ever. But... it works...
             if (ActiveCharacter.type == CHARACTER.HUMAN && HumanElephantDistance <= 5f)
             {
-                characterTemp[CHARACTER.HUMAN] = Mathf.Min(characterTemp[CHARACTER.HUMAN] + 0.5f, characterStat[CHARACTER.HUMAN].MaxTemperature);
+                characterCore[CHARACTER.HUMAN].RestoreTemp(0.5f);
             }
 
 
-            if (isACharacterFrozen && (characterTemp[CHARACTER.HUMAN] <= 0f || characterTemp[CHARACTER.ELEPHANT] <= 0f))
+            if (isACharacterFrozen && (characterCore[CHARACTER.HUMAN].TempValue <= 0f || characterCore[CHARACTER.ELEPHANT].TempValue <= 0f))
             {
                 CanSwitchOverride = false;
                 isACharacterFrozen = true;
@@ -288,15 +263,18 @@ public class GameManager : MonoBehaviour
 
             if (!isACharacterFrozen)
             {
-                if (characterTemp[OtherCharacter.type] > 0f)
+                if (characterCore[OtherCharacter.type].TempValue > 0f)
                 {
                     CanSwitchOverride = true;
                     isACharacterFrozen = false;
                 }
             }
 
-            if (characterTemp[CHARACTER.HUMAN] <= 0f && characterTemp[CHARACTER.ELEPHANT] <= 0f)
+            if (characterCore[CHARACTER.HUMAN].TempValue <= 0f && characterCore[CHARACTER.ELEPHANT].TempValue <= 0f)
             {
+                Debug.Log("YOU DIED, RETURNING TO MENU");
+                yield return new WaitForSeconds(2);
+
                 SceneManager.LoadScene("MainMenu");
             }
         }

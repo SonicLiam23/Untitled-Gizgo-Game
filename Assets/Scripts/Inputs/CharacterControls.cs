@@ -51,7 +51,7 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
         if (context.started)
         {
             rb.linearVelocity = Vector3.zero; // Stop movement when switching 
-            GameManager.Instance.OnSwitch();
+            GameManager.Instance.SwitchCharacter();
         }
     }
 
