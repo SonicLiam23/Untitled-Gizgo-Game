@@ -18,47 +18,42 @@ public enum CHARACTER
 
 public class GameManager : MonoBehaviour
 {
+    // PUBLIC/API
     public static GameManager Instance { get; private set; } = null;
-
-    [Header("MUST BE HUMAN AT INDEX 0 THEN ELEPHANT AT INDEX 1")]
-    public GameObject[] CharacterObject;
-    public Slider[] HoveringFoodSlider;
-    public Slider[] HoveringTempSlider;
-
     public CurrentCharacter ActiveCharacter { get; private set; } = new();
     public CurrentCharacter OtherCharacter { get; private set; } = new();
+    public GameObject Elephant { get; private set; }
+    public GameObject Human { get; private set; }
+    public bool CanSwitchOverride = true;
+    public float HumanElephantDistance { get; private set; }
+
+    // PUBLIC END
+
+    [Header("MUST BE HUMAN AT INDEX 0 THEN ELEPHANT AT INDEX 1")]
+    [SerializeField] private GameObject[] CharacterObject;
+    [SerializeField] private Slider[] HoveringFoodSlider;
+    [SerializeField] private Slider[] HoveringTempSlider;
     private Dictionary<CHARACTER, CharacterCore> characterCore;
-
     private Dictionary<CHARACTER, CharacterStats> characterStat;
-
-    public Slider temperatureSlider;
-    public Slider hungerSlider;
+    [SerializeField] private Slider temperatureSlider;
+    [SerializeField] private Slider hungerSlider;
     private Dictionary<CHARACTER, float> characterTemp;
     private Dictionary<CHARACTER, float> characterHunger;
-
-    public GameObject Elephant => CharacterObject[(int)CHARACTER.ELEPHANT];
-    public GameObject Human => CharacterObject[(int)CHARACTER.HUMAN];
-
-    public float HumanElephantDistance { get; private set; }
- 
     private bool isFollowActive = true;
-    public bool CanSwitchOverride = true;
     private bool isACharacterFrozen = false;
-
     private float tempToReduce;
     private float hungerToReduce;
-
     private float speedChange;
-
     [SerializeField] private float CampfireTempIncrease;
-
     [SerializeField] private MapManager mapManager;
     [SerializeField] private CameraAdjust camera;
     [SerializeField] private TimerScirpt dayNightTimer;
-
     private IEnumerator hungerCoroutine;
     private IEnumerator tempCoroutine;
     private bool inMinigame;
+
+    
+
 
     private void Awake()
     {
@@ -78,7 +73,10 @@ public class GameManager : MonoBehaviour
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-    { 
+    {
+        Human = CharacterObject[(int)CHARACTER.HUMAN];
+        Elephant = CharacterObject[(int)CHARACTER.ELEPHANT];
+
         characterStat[CHARACTER.ELEPHANT] = Elephant.GetComponent<CharacterStats>();
         characterStat[CHARACTER.HUMAN] = Human.GetComponent<CharacterStats>();
 
@@ -152,7 +150,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void OnSwitch()
+    public void SwitchCharacter()
     {
         if (!CanSwitch()) return;
         ForceSwitch();
@@ -281,17 +279,19 @@ public class GameManager : MonoBehaviour
             }
 
 
-            if (CanSwitchOverride && (characterTemp[CHARACTER.HUMAN] <= 0f || characterTemp[CHARACTER.ELEPHANT] <= 0f))
+            if (isACharacterFrozen && (characterTemp[CHARACTER.HUMAN] <= 0f || characterTemp[CHARACTER.ELEPHANT] <= 0f))
             {
                 CanSwitchOverride = false;
+                isACharacterFrozen = true;
                 ForceSwitch();
             }
 
-            if (!CanSwitchOverride)
+            if (!isACharacterFrozen)
             {
                 if (characterTemp[OtherCharacter.type] > 0f)
                 {
                     CanSwitchOverride = true;
+                    isACharacterFrozen = false;
                 }
             }
 
@@ -300,9 +300,6 @@ public class GameManager : MonoBehaviour
                 SceneManager.LoadScene("MainMenu");
             }
         }
-
-        
-
     }
 
 
