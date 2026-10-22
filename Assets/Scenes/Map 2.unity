@@ -64813,6 +64813,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5872238308772779344, guid: 2bf285f448de9004484f829e97e9f4bb, type: 3}
   m_PrefabInstance: {fileID: 699230694}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &701078315
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 701078316}
+  - component: {fileID: 701078317}
+  m_Layer: 0
+  m_Name: _MinigameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &701078316
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701078315}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &701078317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701078315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 142d19a4c5a515f45999a4f9627df55c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MinigameManager
+  Width: 10
+  Depth: 10
+  Height: 1
+  ObjectToSpawn: {fileID: 3590328966683382602, guid: e2c40ce516c2a884ab8cccdbf39169f0, type: 3}
+  AmountOfObjects: 10
 --- !u!1001 &701772412
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -635062,3 +635111,4 @@ SceneRoots:
   - {fileID: 2087468168}
   - {fileID: 1438536755}
   - {fileID: 1854245922}
+  - {fileID: 701078316}
