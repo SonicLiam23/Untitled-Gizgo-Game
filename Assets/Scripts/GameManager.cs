@@ -1,10 +1,5 @@
-using JetBrains.Annotations;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -52,9 +47,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private float CampfireTempIncrease;
 
-    [SerializeField] private MapManager mapManager;
     [SerializeField] private CameraAdjust camera;
     [SerializeField] private TimerScirpt dayNightTimer;
+
+    private BiomeSwapper swapper;
 
     private IEnumerator hungerCoroutine;
     private IEnumerator tempCoroutine;
@@ -110,7 +106,7 @@ public class GameManager : MonoBehaviour
         characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
 
-
+        swapper = GetComponent<BiomeSwapper>();
         InputActionsManager.Init();
 
         hungerCoroutine = HungerCoroutine();
@@ -136,20 +132,18 @@ public class GameManager : MonoBehaviour
 
         HoveringFoodSlider[(int)OtherCharacter.type].value = characterHunger[OtherCharacter.type];
         HoveringTempSlider[(int)OtherCharacter.type].value = characterTemp[OtherCharacter.type];
-
+            
         characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
 
-        //Checks current tile the player is on and changes the rate at which their temp and hunger are reduced based on the tile
-        BiomeTile tile = mapManager?.GetBiomeTileAtPosition(ActiveCharacter.gameObject.transform.position);
+        BiomeConfig.BiomeEntry biome = swapper.CheckBiomeAtPos(ActiveCharacter.gameObject.transform.position);
 
-        if(tile != null)
+
+        if (biome != null)
         {
-            tempToReduce = tile.TempRate;
-            hungerToReduce = tile.HungerRate;
-            characterCore[ActiveCharacter.type].Controls.ChangeInMovementSpeed = tile.PlayerSpeedChange; 
+            tempToReduce = biome.TempRate;
+            hungerToReduce = biome.HungerRate;
+            characterCore[ActiveCharacter.type].Controls.ChangeInMovementSpeed = biome.PlayerSpeedIncrease; 
         }
-
-
     }
 
     public void OnSwitch()

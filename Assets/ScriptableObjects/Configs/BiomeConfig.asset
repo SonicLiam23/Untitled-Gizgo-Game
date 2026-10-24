@@ -13,12 +13,27 @@ MonoBehaviour:
   m_Name: BiomeConfig
   m_EditorClassIdentifier: Assembly-CSharp::BiomeConfig
   biomes:
-  - Prefab: {fileID: 3401379670639340270, guid: 5aeee0da1f1cb264b9b804d6b944d949, type: 3}
+  - Type: 0
     TempRate: 1
     HungerRate: 1
-  - Prefab: {fileID: 8802156182044677627, guid: 70c0f4ec5baf7cb439faeaad3e13f651, type: 3}
+    PlayerSpeedIncrease: 2
+    FoodResource: 1
+    SticksResource: 1
+    CampfiresResource: 1
+    Trees: 0
+  - Type: 1
     TempRate: 3
     HungerRate: 3
-  - Prefab: {fileID: 5969827260605884048, guid: d719ed316ff59c440984ec23be855689, type: 3}
+    PlayerSpeedIncrease: 0
+    FoodResource: 2
+    SticksResource: 2
+    CampfiresResource: 1
+    Trees: 1
+  - Type: 2
     TempRate: 5
     HungerRate: 5
+    PlayerSpeedIncrease: 40
+    FoodResource: 2
+    SticksResource: 3
+    CampfiresResource: 1
+    Trees: 2
