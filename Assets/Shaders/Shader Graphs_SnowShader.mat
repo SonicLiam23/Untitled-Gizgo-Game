@@ -57,8 +57,8 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _SnowBrightness: 1
-    - _SnowPower: 2
+    - _SnowBrightness: 1.02
+    - _SnowPower: 3.74
     - _SnowScale: 80
     - _VertexAmount: 0.3
     m_Colors:
