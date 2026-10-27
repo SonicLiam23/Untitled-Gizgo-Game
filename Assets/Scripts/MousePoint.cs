@@ -4,18 +4,18 @@ public class MousePoint : MonoBehaviour
 {
 
     [SerializeField] private Transform pointTransform;
-    [SerializeField] private Camera playerCamera;
-    [SerializeField] private float mouseSensitivity = 0.01f;
+    [SerializeField] private Camera PlayerCamera;
+    [SerializeField] private float MouseSensitivity = 0.01f;
 
     private bool isFollowingMouse;
 
     private void Start()
     {
-        if (pointTransform == null)
-            pointTransform = transform;
+        pointTransform ??= transform;
+            //pointTransform = transform;
 
-        if (playerCamera == null)
-            playerCamera = Camera.main;
+        PlayerCamera ??= Camera.main;
+            //PlayerCamera = Camera.main;
 
     }
 
@@ -23,7 +23,7 @@ public class MousePoint : MonoBehaviour
     {
         Mouse mouse = Mouse.current;
 
-        if (mouse == null || playerCamera == null)
+        if (mouse == null || PlayerCamera == null)
             return;
 
         if (mouse.leftButton.wasPressedThisFrame)
@@ -32,13 +32,13 @@ public class MousePoint : MonoBehaviour
         if (mouse.leftButton.wasReleasedThisFrame)
             isFollowingMouse = false;
 
-        if (!isFollowingMouse || playerCamera == null)
+        if (!isFollowingMouse || PlayerCamera == null)
             return;
 
         Vector2 mouseDelta = mouse.delta.ReadValue();
-        Vector3 movement = playerCamera.transform.right * mouseDelta.x;
-        movement += playerCamera.transform.up * mouseDelta.y;
+        Vector3 movement = PlayerCamera.transform.right * mouseDelta.x;
+        movement += PlayerCamera.transform.up * mouseDelta.y;
 
-        pointTransform.position += movement * mouseSensitivity;
+        pointTransform.position += movement * MouseSensitivity;
     }
 }
