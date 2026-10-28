@@ -62046,6 +62046,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6300149442484118125, guid: a19a0951a13c67341a4db70d5acdb103, type: 3}
       propertyPath: MaxTemperature
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8034877439461845822, guid: a19a0951a13c67341a4db70d5acdb103, type: 3}
+      propertyPath: maxTemp
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8034877439461845822, guid: a19a0951a13c67341a4db70d5acdb103, type: 3}
+      propertyPath: maxHunger
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8512276181627159003, guid: a19a0951a13c67341a4db70d5acdb103, type: 3}
@@ -63923,23 +63931,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 576885640358952046, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
       propertyPath: MaxTemperature
+      value: 2059.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 1158599393574638884, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1158599393574638884, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1916912038495346415, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1916912038495346415, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2810385347849333612, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 457228c8f6bd1334bb00cd84573a4138, type: 2}
+    - target: {fileID: 3034940198859917027, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
+      propertyPath: maxTemp
       value: 30
       objectReference: {fileID: 0}
-    - target: {fileID: 1158599393574638884, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1158599393574638884, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1916912038495346415, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1916912038495346415, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
+    - target: {fileID: 3034940198859917027, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
+      propertyPath: maxHunger
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5104468664793853169, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -127921,6 +127941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39bc854c9a5b2048b5d786218d3252f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  CanSwitchOverride: 1
   CharacterObject:
   - {fileID: 649738925}
   - {fileID: 577094851}
@@ -127932,10 +127953,10 @@ MonoBehaviour:
   - {fileID: 577094853}
   temperatureSlider: {fileID: 1273053934}
   hungerSlider: {fileID: 1273053933}
-  CanSwitchOverride: 1
   CampfireTempIncrease: 5
   mapManager: {fileID: 633795280}
   camera: {fileID: 1872214249}
+  dayNightTimer: {fileID: 649374138}
 --- !u!4 &1685142161
 Transform:
   m_ObjectHideFlags: 0
