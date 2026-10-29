@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class CampfireInteract : MonoBehaviour, IInteractable
 {
-
+    
     [SerializeField] Material litMaterial;
     [SerializeField] Material unlitMaterial;
-    bool isLit;
+    [SerializeField] private bool isLit;
     [SerializeField] private int sticksToLight = 0;
     [SerializeField] private GameObject particle;
 
     private void Start()
     {
         GetComponent<Renderer>().material = unlitMaterial;
-        isLit = false;
+        if(isLit)
+        {
+            GetComponent<Renderer>().material = litMaterial;
+            particle.SetActive(true);
+        }
+        //isLit = false;
     }
     public GameObject OnEnterRadius(Collider other)
     {
