@@ -9,7 +9,12 @@ public class CharacterCore : MonoBehaviour
     public CharacterControls Controls { get; private set; }
     public bool isAIEnabled { get; private set; } = true;
 
-    public Canvas OverHeadUI { get; private set; }
+    //Assign in inspector
+    [SerializeField] private Canvas overHeadUI;
+    [SerializeField] private Canvas selectedArrowUI;
+    //Public getter
+    public Canvas OverHeadUI => overHeadUI;
+    public Canvas SelectedArrowUI => selectedArrowUI;
 
     public bool InLitCampfireRadius = false;
     public bool HeatLossGainEnabled = true;
@@ -22,7 +27,6 @@ public class CharacterCore : MonoBehaviour
         currentInteractables = new();
         AgentController = GetComponent<AgentController>();
         Controls = GetComponent<CharacterControls>();
-        OverHeadUI = GetComponentInChildren<Canvas>();
     }
 
     public void SetAIEnabled(bool enabled)

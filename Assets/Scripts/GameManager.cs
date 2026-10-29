@@ -104,7 +104,9 @@ public class GameManager : MonoBehaviour
         HoveringFoodSlider[(int)CHARACTER.ELEPHANT].maxValue = characterStat[CHARACTER.ELEPHANT].MaxHunger;
         HoveringTempSlider[(int)CHARACTER.ELEPHANT].maxValue = characterStat[CHARACTER.ELEPHANT].MaxTemperature;
         characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
+        characterCore[OtherCharacter.type].SelectedArrowUI.enabled = false;
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
+        characterCore[ActiveCharacter.type].SelectedArrowUI.enabled = true;
 
         swapper = GetComponent<BiomeSwapper>();
         InputActionsManager.Init();
@@ -175,8 +177,10 @@ public class GameManager : MonoBehaviour
         hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
 
         characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
+        characterCore[OtherCharacter.type].SelectedArrowUI.enabled = false;
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
-        
+        characterCore[ActiveCharacter.type].SelectedArrowUI.enabled = true;
+
     }
 
     public void EnterMinigame()
