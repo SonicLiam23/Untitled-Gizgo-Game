@@ -32,7 +32,7 @@ MonoBehaviour:
   - Type: 2
     TempRate: 5
     HungerRate: 5
-    PlayerSpeedIncrease: 40
+    PlayerSpeedIncrease: 0
     FoodResource: 2
     SticksResource: 3
     CampfiresResource: 1
