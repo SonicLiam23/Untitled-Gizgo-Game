@@ -232,6 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da5a1941f26fd314da26ae584621ad81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StickInteract
+  UIAnimator: {fileID: 4783002778854940616}
 --- !u!135 &5085201145282610541
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -313,11 +314,49 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7195724728680242212, guid: 56ca7756a07fcf94387175b854e17b23, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7513504837320979477, guid: 56ca7756a07fcf94387175b854e17b23, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294967295
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2003260514069902575, guid: 56ca7756a07fcf94387175b854e17b23, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4783002778854940616}
   m_SourcePrefab: {fileID: 100100000, guid: 56ca7756a07fcf94387175b854e17b23, type: 3}
+--- !u!1 &2389026841470653937 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2003260514069902575, guid: 56ca7756a07fcf94387175b854e17b23, type: 3}
+  m_PrefabInstance: {fileID: 4245352468663804190}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &4783002778854940616
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2389026841470653937}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c760c6869ecd4c24bb83206c475b4c66, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!224 &6428567513544686906 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7195724728680242212, guid: 56ca7756a07fcf94387175b854e17b23, type: 3}

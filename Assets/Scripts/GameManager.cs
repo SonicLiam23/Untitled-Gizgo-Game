@@ -288,7 +288,7 @@ public class GameManager : MonoBehaviour
                     CanSwitchOverride = true;
                 }
             }
-
+            
             if (characterTemp[CHARACTER.HUMAN] <= 0f && characterTemp[CHARACTER.ELEPHANT] <= 0f)
             {
                 SceneManager.LoadScene("MainMenu");

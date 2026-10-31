@@ -24,16 +24,16 @@ MonoBehaviour:
   - Type: 1
     TempRate: 3
     HungerRate: 3
-    PlayerSpeedIncrease: 0
+    PlayerSpeedIncrease: 1
     FoodResource: 2
     SticksResource: 1
     CampfiresResource: 0
-    Trees: 4
+    Trees: 3
   - Type: 2
     TempRate: 5
     HungerRate: 5
-    PlayerSpeedIncrease: 40
+    PlayerSpeedIncrease: 0
     FoodResource: 2
-    SticksResource: 3
-    CampfiresResource: 0
+    SticksResource: 2
+    CampfiresResource: 1
     Trees: 4
