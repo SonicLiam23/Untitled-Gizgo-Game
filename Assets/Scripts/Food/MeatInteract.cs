@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class MeatInteract : MonoBehaviour, IInteractable
 {
+    [SerializeField] Animator UIAnimator;
     public float FoodRestored = 10f;
     public GameObject OnEnterRadius(Collider other)
     {
@@ -25,6 +26,7 @@ public class MeatInteract : MonoBehaviour, IInteractable
         else
         {
             Debug.Log("You must be a human to eat this");
+            UIAnimator.SetTrigger("Reject"); //Animation if trying to interact as elephant
         }
     }
 }
