@@ -12,7 +12,6 @@ public class BiomeSwapper : MonoBehaviour
     {
         checker = new TerrainChecker();
     }
-
     public BiomeConfig.BiomeEntry CheckBiomeAtPos(Vector3 checkedPos)
     {
         RaycastHit hit;

@@ -13,6 +13,8 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
     protected bool isMoving;
     protected bool isJumping;
 
+    private bool isGrounded;
+
     CharacterCore characterCore;
 
     public void Awake()
@@ -96,23 +98,31 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
 
     public void OnSprint(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && isGrounded)
         {
             isJumping = true;
+            rb.AddForce(Vector3.up * DefaultJumpSpeed, ForceMode.Impulse);
+
         }
         else if (context.canceled)
         {
             isJumping = false;
         }
+        
+    }
 
-
-        rb.AddForce(Vector3.up * DefaultJumpSpeed, ForceMode.Impulse);
-
+    void OnCollisionStay()
+    { 
+        isGrounded = true;
+    }
+    void OnCollisionExit()
+    { 
+        isGrounded = false;
     }
 
 
@@ -124,8 +134,9 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
         }
         else
         {
-            //Set the linear velocity to zero when not moving to prevent the character sliding when movement stops
-            rb.linearVelocity = Vector3.zero;
+            //Set the x and z to zero when not moving to prevent the character sliding when movement stops
+            //y is left the same so character doesn't get stuck mid air
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
         }
     }
 }
