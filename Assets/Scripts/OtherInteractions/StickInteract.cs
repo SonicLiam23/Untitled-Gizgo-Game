@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class StickInteract : MonoBehaviour, IInteractable
 {
+    [SerializeField] Animator UIAnimator;
+
     public GameObject OnEnterRadius(Collider other)
     {
         Debug.Log("Entered Stick Radius");
@@ -25,6 +27,7 @@ public class StickInteract : MonoBehaviour, IInteractable
         else
         {
             Debug.Log("You must be a Human to collect this");
+            UIAnimator.SetTrigger("Reject"); //Animation if trying to interact as elephant
         }
     }
 }

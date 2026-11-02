@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlantInteract : MonoBehaviour, IInteractable
 {
+    [SerializeField] Animator UIAnimator;
     public GameObject OnEnterRadius(Collider other)
     {
         return other.gameObject;
@@ -24,6 +25,7 @@ public class PlantInteract : MonoBehaviour, IInteractable
         else
         {
             Debug.Log("You must be an elephant to eat this");
+            UIAnimator.SetTrigger("Reject"); //Animation if trying to interact as human
         }
     }
 }
