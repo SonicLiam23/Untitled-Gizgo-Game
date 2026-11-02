@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.VolumeComponent;
 
 public enum CHARACTER
 {
@@ -51,12 +52,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TimerScirpt dayNightTimer;
 
     [SerializeField] private Image FreezingImg;
+    [SerializeField] private Image DeathImg;
+    [SerializeField] private Button MainMenuButton;
+
+
 
     private BiomeSwapper swapper;
 
     private IEnumerator hungerCoroutine;
     private IEnumerator tempCoroutine;
     private bool inMinigame;
+    private bool inDeath;
 
     private void Awake()
     {
@@ -117,8 +123,12 @@ public class GameManager : MonoBehaviour
         tempCoroutine = TempCoroutine();
 
         inMinigame = false;
-
+        inDeath = false;
+        
         FreezingImg.enabled = false;
+        DeathImg.enabled = false;
+
+        MainMenuButton.gameObject.SetActive(false);
 
         StartCoroutine(hungerCoroutine);
         StartCoroutine(tempCoroutine);
@@ -128,6 +138,11 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         HumanElephantDistance = Vector3.Distance(Human.transform.position, Elephant.transform.position);
+
+        if (characterTemp[ActiveCharacter.type] <= 0 && characterTemp[OtherCharacter.type] <= 0)
+        {
+            EnterDeathState();
+        }
     }
 
     private void FixedUpdate()
@@ -158,8 +173,10 @@ public class GameManager : MonoBehaviour
         {
             tempToReduce = biome.TempRate;
             hungerToReduce = biome.HungerRate;
-            characterCore[ActiveCharacter.type].Controls.ChangeInMovementSpeed = biome.PlayerSpeedIncrease; 
+            characterCore[ActiveCharacter.type].Controls.ChangeInMovementSpeed = biome.PlayerSpeedIncrease;
+
         }
+
     }
 
     public void OnSwitch()
@@ -195,6 +212,31 @@ public class GameManager : MonoBehaviour
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
         characterCore[ActiveCharacter.type].SelectedArrowUI.enabled = true;
 
+    }
+
+    public void EnterDeathState()
+    {
+        inDeath = true;
+        DeathImg.enabled = true;
+        MainMenuButton.gameObject.SetActive(true);
+        StopCoroutine(hungerCoroutine);
+        StopCoroutine(tempCoroutine);
+        // disables the UI, jank asf i actually really hate this, but it works.
+        temperatureSlider.transform.parent.gameObject.SetActive(false);
+        HoveringFoodSlider[0].transform.parent.gameObject.SetActive(false);
+        HoveringFoodSlider[1].transform.parent.gameObject.SetActive(false);
+        dayNightTimer.SetTimePasses(false);
+
+    }
+
+    public void ExitDeathState()
+    {
+        inDeath = false;
+        DeathImg.enabled = false;
+        MainMenuButton.gameObject.SetActive(false);
+
+        SceneManager.LoadScene("MainMenu");
+        //return to main menu
     }
 
     public void EnterMinigame()
@@ -306,15 +348,7 @@ public class GameManager : MonoBehaviour
                     CanSwitchOverride = true;
                 }
             }
-            
-            if (characterTemp[CHARACTER.HUMAN] <= 0f && characterTemp[CHARACTER.ELEPHANT] <= 0f)
-            {
-                SceneManager.LoadScene("MainMenu");
-            }
-        }
-
-        
-
+        } 
     }
 
 
