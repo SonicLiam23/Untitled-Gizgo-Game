@@ -6,9 +6,12 @@ using UnityEngine.InputSystem;
 public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActions
 {
     public float DefaultMovementSpeed = 5f;
+
+    public float DefaultJumpSpeed = 0.5f;
     public float ChangeInMovementSpeed = 0f;
     protected Rigidbody rb;
     protected bool isMoving;
+    protected bool isJumping;
 
     CharacterCore characterCore;
 
@@ -96,6 +99,21 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
         
     }
 
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            isJumping = true;
+        }
+        else if (context.canceled)
+        {
+            isJumping = false;
+        }
+
+
+        rb.AddForce(Vector3.up * DefaultJumpSpeed, ForceMode.Impulse);
+
+    }
 
 
     protected virtual void FixedUpdate()
