@@ -100,6 +100,14 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
 
     protected virtual void FixedUpdate()
     {
-        if (isMoving) rb.linearVelocity = new Vector3(InputActionsManager.Instance.MovementInput.x, rb.linearVelocity.y, InputActionsManager.Instance.MovementInput.z);
+        if (isMoving)
+        {
+            rb.linearVelocity = new Vector3(InputActionsManager.Instance.MovementInput.x, rb.linearVelocity.y, InputActionsManager.Instance.MovementInput.z);
+        }
+        else
+        {
+            //Set the linear velocity to zero when not moving to prevent the character sliding when movement stops
+            rb.linearVelocity = Vector3.zero;
+        }
     }
 }

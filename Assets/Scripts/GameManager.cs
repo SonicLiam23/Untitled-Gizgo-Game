@@ -50,6 +50,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CameraAdjust camera;
     [SerializeField] private TimerScirpt dayNightTimer;
 
+    [SerializeField] private Image FreezingImg;
+
     private BiomeSwapper swapper;
 
     private IEnumerator hungerCoroutine;
@@ -104,7 +106,9 @@ public class GameManager : MonoBehaviour
         HoveringFoodSlider[(int)CHARACTER.ELEPHANT].maxValue = characterStat[CHARACTER.ELEPHANT].MaxHunger;
         HoveringTempSlider[(int)CHARACTER.ELEPHANT].maxValue = characterStat[CHARACTER.ELEPHANT].MaxTemperature;
         characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
+        characterCore[OtherCharacter.type].SelectedArrowUI.enabled = false;
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
+        characterCore[ActiveCharacter.type].SelectedArrowUI.enabled = true;
 
         swapper = GetComponent<BiomeSwapper>();
         InputActionsManager.Init();
@@ -113,6 +117,8 @@ public class GameManager : MonoBehaviour
         tempCoroutine = TempCoroutine();
 
         inMinigame = false;
+
+        FreezingImg.enabled = false;
 
         StartCoroutine(hungerCoroutine);
         StartCoroutine(tempCoroutine);
@@ -132,7 +138,17 @@ public class GameManager : MonoBehaviour
 
         HoveringFoodSlider[(int)OtherCharacter.type].value = characterHunger[OtherCharacter.type];
         HoveringTempSlider[(int)OtherCharacter.type].value = characterTemp[OtherCharacter.type];
-            
+
+        //if current character temp is at 30% or below from the total temp
+        if (characterTemp[ActiveCharacter.type] <= characterStat[ActiveCharacter.type].MaxTemperature * 30 / 100)
+        {
+            FreezingImg.enabled = true;
+        }
+        else
+        {
+            FreezingImg.enabled = false;
+        }
+
         characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
 
         BiomeConfig.BiomeEntry biome = swapper.CheckBiomeAtPos(ActiveCharacter.gameObject.transform.position);
@@ -175,8 +191,10 @@ public class GameManager : MonoBehaviour
         hungerSlider.maxValue = characterStat[ActiveCharacter.type].MaxHunger;
 
         characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
+        characterCore[OtherCharacter.type].SelectedArrowUI.enabled = false;
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
-        
+        characterCore[ActiveCharacter.type].SelectedArrowUI.enabled = true;
+
     }
 
     public void EnterMinigame()
