@@ -52,8 +52,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TimerScirpt dayNightTimer;
 
     [SerializeField] private Image FreezingImg;
-    [SerializeField] private Image DeathImg;
-    [SerializeField] private Button MainMenuButton;
+    [SerializeField] private CanvasGroup DeathImgGroup;
+    [SerializeField] private GameObject humanControlUI;
+    [SerializeField] private GameObject elephantControlUI;
 
 
 
@@ -126,9 +127,7 @@ public class GameManager : MonoBehaviour
         inDeath = false;
         
         FreezingImg.enabled = false;
-        DeathImg.enabled = false;
-
-        MainMenuButton.gameObject.SetActive(false);
+        DeathScreenState(false);
 
         StartCoroutine(hungerCoroutine);
         StartCoroutine(tempCoroutine);
@@ -197,6 +196,9 @@ public class GameManager : MonoBehaviour
 
         characterCore[ActiveCharacter.type].AgentController.enabled = false;
 
+        // adding this in to swap the control scheme UI based on the active character
+        SwapControlUI();
+
         // temp whilst i fix the "switching pushes the character down a bit" bug (its to do with the navmesh agent)
         TEMP_fixNavmeshMovement();
 
@@ -217,8 +219,7 @@ public class GameManager : MonoBehaviour
     public void EnterDeathState()
     {
         inDeath = true;
-        DeathImg.enabled = true;
-        MainMenuButton.gameObject.SetActive(true);
+        DeathScreenState(true);
         StopCoroutine(hungerCoroutine);
         StopCoroutine(tempCoroutine);
         // disables the UI, jank asf i actually really hate this, but it works.
@@ -232,8 +233,7 @@ public class GameManager : MonoBehaviour
     public void ExitDeathState()
     {
         inDeath = false;
-        DeathImg.enabled = false;
-        MainMenuButton.gameObject.SetActive(false);
+        DeathScreenState(false);
 
         SceneManager.LoadScene("MainMenu");
         //return to main menu
@@ -360,5 +360,43 @@ public class GameManager : MonoBehaviour
         Vector3 adjustment = new Vector3(0f, 0.2f, 0f);
         Elephant.transform.position += adjustment;
         Human.transform.position += adjustment;
+    }
+
+    // Handles swapping the UI that shows the different controls
+    private void SwapControlUI()
+    {
+        if(humanControlUI != null && elephantControlUI !=null)
+        {
+            CanvasGroup hGroup = humanControlUI.GetComponent<CanvasGroup>();
+            CanvasGroup eGroup = elephantControlUI.GetComponent<CanvasGroup>();
+
+            if (ActiveCharacter.type == CHARACTER.HUMAN)
+            {
+                hGroup.alpha = 1f;
+                eGroup.alpha = 0f;
+            }
+            else
+            {
+                hGroup.alpha = 0f;
+                eGroup.alpha = 1f;
+            }
+        }
+    }
+
+    // Handles showing/hiding the death screen
+    private void DeathScreenState(bool active)
+    {
+        if (active)
+        {
+            DeathImgGroup.alpha = 1f;
+            DeathImgGroup.blocksRaycasts = true;
+            DeathImgGroup.interactable = true;
+        }
+        else
+        {
+            DeathImgGroup.alpha = 0f;
+            DeathImgGroup.blocksRaycasts = false;
+            DeathImgGroup.interactable = false;
+        }
     }
 }
