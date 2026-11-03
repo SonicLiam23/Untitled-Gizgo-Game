@@ -1,132 +1,153 @@
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
 public class ElephantController : CharacterControls
 {
-    public float rotationSpeed = 20f;
+    [Header("Steering")]
+    [SerializeField] private float rotationSpeed = 20f;
+    [SerializeField] private float steeringDamping = 10f;
+
+    [Header("Base Speed & Limits")]
+    [SerializeField] private float baseMaxVelocity = 2f;    // holding W speed
+    [SerializeField] private float maxVelocityCap = 10f;    // absolute cap after sprint taps
+    [SerializeField] private float reverseMaxVelocity = 2f; // max reverse speed
+
+    [Header("Shift to sprint")]
+    [SerializeField] private float sprintStep = 1.5f;       // boost added per shift tap
+    [SerializeField] private float sprintDecayRate = 2f;    // velocity lost per second back to base speed
+
+    [Header("Acceleration")]
+    [SerializeField] private float acceleration = 4f;       // speed buildup rate
+    [SerializeField] private float deceleration = 5f;       // braking/coasting rate
+
+    private float currentMaxVelocity;
+    private float currentVelocity;
     private float currentRotation;
     private float movement;
-    [Header("Velocity System")]
-    [SerializeField] private float baseMaxVelocity = 2f;   // starting max velocity when holding forward
-    [SerializeField] private float maxVelocityCap = 10f;   // absolute cap for max velocity after shift taps
-    [SerializeField] private float sprintStep = 2f;        // amount added to max velocity per shift tap
-    [SerializeField] private float acceleration = 3f;      // units per second when holding forward
-    [SerializeField] private float deceleration = 4f;      // units per second when releasing forward
-    [SerializeField] private float boostStep = 2f;    // amount added per press
-    [SerializeField] private float maxBoost = 8f;    // max absolute boost
-    [SerializeField] private float decayRate = 2f;    // units per second (1 => 5 units decays in 5s)
-    private float boostSpeed = 0f;                    // current extra speed (+ forward, - reverse)
+    private bool forwardHeld;
+    private bool backwardHeld;
 
-    private float currentMaxVelocity; // current target max (starts at baseMaxVelocity)
-    private float currentVelocity;    // actual current forward velocity (signed)
-    private bool forwardHeld = false;
-    private bool backwardHeld = false;
-    [SerializeField] private float reverseMaxVelocity = 2f; // max speed in reverse (positive value, used as negative)
-
-    // ... existing fields like MovementSpeed, rotationSpeed, currentRotation, movement ...
+    public override void Awake()
+    {
+        base.Awake();
+        currentMaxVelocity = baseMaxVelocity;
+    }
 
     public override void OnMove(InputAction.CallbackContext context)
     {
-        Vector2 movementInput = context.ReadValue<Vector2>();
+        if (context.started) isMoving = true;
 
-        // Add a boost only on input start (button/stick press)
-        if (context.started)
-        {
-            isMoving = true;
-            if (movementInput.y > 0f)
-            {
-                if (boostSpeed < 0f) boostSpeed = 0f; // reset if switching direction
-                boostSpeed = Mathf.Min(boostSpeed + boostStep, maxBoost);
-            }
-            else if (movementInput.y < 0f)
-            {
-                if (boostSpeed > 0f) boostSpeed = 0f;
-                boostSpeed = Mathf.Max(boostSpeed - boostStep, -maxBoost);
-            }
-        }
-        else if (context.canceled)
+
+        Vector2 input = context.ReadValue<Vector2>();
+
+        // Tank rotation: A/D or Left Stick X
+        currentRotation = input.x * rotationSpeed;
+
+        // Forward / Backward tracking: W/S or Left Stick Y
+        forwardHeld = input.y > 0.1f;
+        backwardHeld = input.y < -0.1f;
+
+        if (context.canceled)
         {
             isMoving = false;
+            forwardHeld = false;
+            backwardHeld = false;
+            currentRotation = 0f;
         }
+    }
 
-        // rotation same as before
-        currentRotation = movementInput.x * rotationSpeed;
-
-        // track whether forward/backward is being held (used in Update for velocity changes)
-        forwardHeld = movementInput.y > 0f;
-        backwardHeld = movementInput.y < 0f;
-
-        // movement value will be driven by currentVelocity (set in Update/FixedUpdate)
-        // keep 'movement' populated for other code that may reference it
-        movement = currentVelocity;
+    // Bind this to your 'Sprint' action (Shift / Controller Button) in Unity's Input Action asset
+    public override void OnSprint(InputAction.CallbackContext context)
+    {
+        if (context.started && forwardHeld)
+        {
+            ApplySprintTap();
+        }
     }
 
     private void Update()
     {
-        // Initialize currentMaxVelocity on first Update
-        if (currentMaxVelocity == 0f)
-            currentMaxVelocity = baseMaxVelocity;
-
-        // Check keyboard shift tap as a fallback (in case input system binding isn't used)
-        var kb = UnityEngine.InputSystem.Keyboard.current;
-        if (kb != null && (kb.leftShiftKey.wasPressedThisFrame || kb.rightShiftKey.wasPressedThisFrame))
+        // "decelerate" current max vel to base
+        if (currentMaxVelocity > baseMaxVelocity)
         {
-            IncreaseMaxVelocity();
+            currentMaxVelocity = Mathf.MoveTowards(currentMaxVelocity, baseMaxVelocity, sprintDecayRate * Time.deltaTime);
         }
 
-        // Accelerate toward the appropriate target while forward or backward is held, otherwise decelerate toward 0
+        // "actual" linear velocity (with respect to the forward axis, not just any)
+        float actualForwardSpeed = Vector3.Dot(rb.linearVelocity, transform.forward);
+
+        // pushing forward but physically stuck against an obstacle:
+        if (forwardHeld && currentVelocity > 1f && actualForwardSpeed < 0.4f)
+        {
+            // Clamp velocity down to real speed so you don't build phantom momentum (the sprint trying to push you forward)
+            currentVelocity = Mathf.Max(0f, actualForwardSpeed);
+            currentMaxVelocity = baseMaxVelocity; // optionally wipe sprint boost on impact
+        }
+        // Same for backing into a wall
+        else if (backwardHeld && currentVelocity < -1f && actualForwardSpeed > -0.4f)
+        {
+            currentVelocity = Mathf.Min(0f, actualForwardSpeed);
+        }
+
+        // calculate target velocity based on input
+        float targetVelocity = 0f;
         if (forwardHeld)
         {
-            currentVelocity = Mathf.MoveTowards(currentVelocity, currentMaxVelocity, acceleration * Time.deltaTime);
+            targetVelocity = currentMaxVelocity;
         }
         else if (backwardHeld)
         {
-            // target is negative reverse max
-            currentVelocity = Mathf.MoveTowards(currentVelocity, -reverseMaxVelocity, acceleration * Time.deltaTime);
+            targetVelocity = -reverseMaxVelocity;
+        }
+
+        bool isCounterBraking = (backwardHeld && currentVelocity > 0.1f) || (forwardHeld && currentVelocity < -0.1f);
+
+        float rate;
+        if (isCounterBraking)
+        {
+            rate = deceleration * 4f; // 4x braking bite so S immediately halts forward movement
+        }
+        else if (forwardHeld || backwardHeld)
+        {
+            rate = acceleration;
         }
         else
         {
-            currentVelocity = Mathf.MoveTowards(currentVelocity, 0f, deceleration * Time.deltaTime);
+            rate = deceleration;
         }
 
-        // keep movement in sync
+        currentVelocity = Mathf.MoveTowards(currentVelocity, targetVelocity, rate * Time.deltaTime);
         movement = currentVelocity;
-        currentMaxVelocity = Mathf.Max(currentMaxVelocity - Time.deltaTime, baseMaxVelocity);
 
+        isMoving = forwardHeld || backwardHeld || Mathf.Abs(currentVelocity) > 0.05f || Mathf.Abs(currentRotation) > 0.1f;
     }
 
-    // Optional input callback: wire this to your Sprint (Shift) action in the Input System
-    public void OnSprint(InputAction.CallbackContext context)
+    private void ApplySprintTap()
     {
-        if (context.started)
-            IncreaseMaxVelocity();
-    }
-
-    private void IncreaseMaxVelocity()
-    {
+        // increase max speed the max speed
         currentMaxVelocity = Mathf.Min(currentMaxVelocity + sprintStep, maxVelocityCap);
-        // ensure currentVelocity doesn't exceed new max immediately (optional)
-        currentVelocity = Mathf.Min(currentVelocity, currentMaxVelocity);
+
+        // Give a small impulse so tapping Shift feels "punchy"
+        currentVelocity = Mathf.Min(currentVelocity + (sprintStep * 0.75f), currentMaxVelocity);
     }
 
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        rb.angularVelocity = new Vector3(rb.angularVelocity.x, currentRotation/ 10, rb.angularVelocity.z);
+
+        // Tank steering
+        rb.angularVelocity = new Vector3(rb.angularVelocity.x, currentRotation / steeringDamping, rb.angularVelocity.z);
+
+        // Tank forward/backward
         InputActionsManager.Instance.MovementInput = movement * transform.forward;
     }
 
-
-    //Reset all variables so that velocity isn't retained when switching off and back on to the elephant
     private void OnDisable()
     {
         movement = 0f;
         currentRotation = 0f;
-        currentMaxVelocity = baseMaxVelocity;
         currentVelocity = 0f;
-        boostSpeed = 0f;
+        currentMaxVelocity = baseMaxVelocity;
         forwardHeld = false;
         backwardHeld = false;
     }

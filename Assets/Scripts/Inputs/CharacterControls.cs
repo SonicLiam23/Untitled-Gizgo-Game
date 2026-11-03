@@ -17,7 +17,7 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
 
     CharacterCore characterCore;
 
-    public void Awake()
+    public virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
         characterCore = GetComponent<CharacterCore>();
@@ -96,7 +96,7 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
         if (context.started) GameManager.Instance.EnterMinigame();
     }
 
-    public void OnSprint(InputAction.CallbackContext context)
+    public virtual void OnSprint(InputAction.CallbackContext context)
     {
 
     }
