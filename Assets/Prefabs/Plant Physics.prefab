@@ -164,6 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantInteract
   UIAnimator: {fileID: 2602233179663541429}
+  sound: {fileID: 8300000, guid: 60ae0c62062b1ca4f9734b6d1e9d66b2, type: 3}
 --- !u!54 &2668653171215337615
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using UnityEngine;
 public class MeatInteract : MonoBehaviour, IInteractable
 {
     [SerializeField] Animator UIAnimator;
+    [SerializeField] AudioClip sound; //Sound when picked up
     public float FoodRestored = 10f;
     public GameObject OnEnterRadius(Collider other)
     {
@@ -20,7 +21,7 @@ public class MeatInteract : MonoBehaviour, IInteractable
         {
             GameManager.Instance.RestoreHunger(FoodRestored);
             ScoreManager.Instance.AddMeat();
-            
+            AudioManager.instance.PlaySound(sound);
             Destroy(gameObject);
         }
         else

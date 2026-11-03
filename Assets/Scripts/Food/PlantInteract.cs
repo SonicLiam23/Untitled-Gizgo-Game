@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlantInteract : MonoBehaviour, IInteractable
 {
     [SerializeField] Animator UIAnimator;
+    [SerializeField] AudioClip sound; //Sound when picked up
     public GameObject OnEnterRadius(Collider other)
     {
         return other.gameObject;
@@ -20,6 +21,7 @@ public class PlantInteract : MonoBehaviour, IInteractable
             GameManager.Instance.RestoreHunger(25f);
             ScoreManager.Instance.AddPlant();
             Debug.Log("Elephant ate the plant!");
+            AudioManager.instance.PlaySound(sound);
             Destroy(gameObject);
         }
         else

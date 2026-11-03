@@ -528,6 +528,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MeatInteract
   UIAnimator: {fileID: 5656742545028098383}
+  sound: {fileID: 8300000, guid: 60ae0c62062b1ca4f9734b6d1e9d66b2, type: 3}
   FoodRestored: 15
 --- !u!1 &8523713096195613646
 GameObject:

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BiomeConfig
   biomes:
   - Type: 0
-    TempRate: 1
+    TempRate: 0
     HungerRate: 1
     PlayerSpeedIncrease: 2
     FoodResource: 0
