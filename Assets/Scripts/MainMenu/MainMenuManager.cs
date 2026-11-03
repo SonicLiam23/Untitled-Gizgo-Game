@@ -1,21 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class MainMenuManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] AudioSource audioSource;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    //Switch to game scene
+    //Simple switch to another scene
     public void SwitchScene(string scene)
     {
         SceneManager.LoadScene(scene);
@@ -25,5 +16,22 @@ public class MainMenuManager : MonoBehaviour
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+    //Play sound and wait before switching scene
+    public void SwitchSceneSound(string scene)
+    {
+        StartCoroutine(WaitForSound(scene));
+        
+    }
+
+    IEnumerator WaitForSound(string scene)
+    {
+        audioSource.Play();
+
+        yield return new WaitUntil(() => !audioSource.isPlaying);
+
+        Debug.Log("Sound finished");
+        SceneManager.LoadScene(scene);
     }
 }
