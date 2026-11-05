@@ -1661,10 +1661,10 @@ MonoBehaviour:
   MediumValue: 0.2
   HighValue: 0.5
   seed: 0
-  biomesConfig: {fileID: 0}
+  biomesConfig: {fileID: 11400000, guid: 7215614f64bd4fa479ef578643339e64, type: 2}
   itemConfig: {fileID: 11400000, guid: 66c8568aff11d0348b8f7087726d9837, type: 2}
   interactablesContainer: {fileID: 1247292158}
-  terrain: {fileID: 0}
+  terrain: {fileID: 733261510}
 --- !u!4 &633795281
 Transform:
   m_ObjectHideFlags: 0
