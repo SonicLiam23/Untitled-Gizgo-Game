@@ -1526,7 +1526,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6300149442484118125, guid: a19a0951a13c67341a4db70d5acdb103, type: 3}
       propertyPath: MaxTemperature
-      value: 100
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8034877439461845822, guid: a19a0951a13c67341a4db70d5acdb103, type: 3}
       propertyPath: overHeadUI
@@ -1682,7 +1682,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 576885640358952046, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
       propertyPath: MaxTemperature
-      value: 70
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1158599393574638884, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
       propertyPath: m_AnchorMax.x

@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
 
 
         Instance = this;
+
         characterStat = new();
         characterTemp = new();
         characterHunger = new();
