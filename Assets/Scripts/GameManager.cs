@@ -236,6 +236,9 @@ public class GameManager : MonoBehaviour
         inDeath = false;
         DeathScreenState(false);
 
+        InputActionsManager.Instance.InputActions.Player.Disable();
+
+
         SceneManager.LoadScene("MainMenu");
         //return to main menu
     }
@@ -387,17 +390,9 @@ public class GameManager : MonoBehaviour
     // Handles showing/hiding the death screen
     private void DeathScreenState(bool active)
     {
-        if (active)
-        {
-            DeathImgGroup.alpha = 1f;
-            DeathImgGroup.blocksRaycasts = true;
-            DeathImgGroup.interactable = true;
-        }
-        else
-        {
-            DeathImgGroup.alpha = 0f;
-            DeathImgGroup.blocksRaycasts = false;
-            DeathImgGroup.interactable = false;
-        }
+
+        DeathImgGroup.alpha = active ? 1f : 0f;
+        DeathImgGroup.blocksRaycasts = active;
+        DeathImgGroup.interactable = active;
     }
 }
