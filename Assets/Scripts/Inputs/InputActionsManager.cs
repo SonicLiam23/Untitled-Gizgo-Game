@@ -13,24 +13,23 @@ public class InputActionsManager
     private InputActionsManager()
     {
         InputActions = new InputSystem_Actions();
-        InputActions.Player.Enable();
+
         characterController = new();
     }
 
     public static void Init()
     {
-        //commented this check out so it doesn't skip the rest of the init when changing scenes
-       // if (Instance != null)
-       //{
-       //     return;
-       //}
-
-        Instance = new InputActionsManager();
+ 
+        if (Instance == null)
+        {
+             Instance = new InputActionsManager();
+        }
 
         Instance.characterController[CHARACTER.ELEPHANT] = GameManager.Instance.Elephant.GetComponent<CharacterControls>();
         Instance.characterController[CHARACTER.HUMAN] = GameManager.Instance.Human.GetComponent<CharacterControls>();
         Instance.characterController[CHARACTER.ELEPHANT].enabled = false;
         Instance.characterController[CHARACTER.HUMAN].enabled = true;
+        Instance.InputActions.Player.Enable();
         Instance.InputActions.Player.SetCallbacks(Instance.characterController[CHARACTER.HUMAN]);
 
     }
