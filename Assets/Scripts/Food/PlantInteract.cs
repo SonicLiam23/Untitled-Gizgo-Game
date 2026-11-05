@@ -4,6 +4,7 @@ public class PlantInteract : MonoBehaviour, IInteractable
 {
     [SerializeField] Animator UIAnimator;
     [SerializeField] AudioClip sound; //Sound when picked up
+    [SerializeField] private float FoodRestored = 10f;
     public GameObject OnEnterRadius(Collider other)
     {
         return other.gameObject;
@@ -18,7 +19,7 @@ public class PlantInteract : MonoBehaviour, IInteractable
     {
         if (GameManager.Instance.ActiveCharacter.type == CHARACTER.ELEPHANT)
         {
-            GameManager.Instance.RestoreHunger(25f);
+            GameManager.Instance.characterCore[CHARACTER.ELEPHANT].RestoreHunger(FoodRestored);
             ScoreManager.Instance.AddPlant();
             Debug.Log("Elephant ate the plant!");
             AudioManager.instance.PlaySound(sound);
