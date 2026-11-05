@@ -6,9 +6,14 @@ using UnityEngine.InputSystem;
 public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActions
 {
     public float DefaultMovementSpeed = 5f;
+
+    public float DefaultJumpSpeed = 0.5f;
     public float ChangeInMovementSpeed = 0f;
     protected Rigidbody rb;
     protected bool isMoving;
+    protected bool isJumping;
+
+    private bool isGrounded;
 
     CharacterCore characterCore;
 
@@ -93,13 +98,45 @@ public class CharacterControls : MonoBehaviour, InputSystem_Actions.IPlayerActio
 
     public void OnSprint(InputAction.CallbackContext context)
     {
+
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.started && isGrounded)
+        {
+            isJumping = true;
+            rb.AddForce(Vector3.up * DefaultJumpSpeed, ForceMode.Impulse);
+
+        }
+        else if (context.canceled)
+        {
+            isJumping = false;
+        }
         
     }
 
+    void OnCollisionStay()
+    { 
+        isGrounded = true;
+    }
+    void OnCollisionExit()
+    { 
+        isGrounded = false;
+    }
 
 
     protected virtual void FixedUpdate()
     {
-        if (isMoving) rb.linearVelocity = new Vector3(InputActionsManager.Instance.MovementInput.x, rb.linearVelocity.y, InputActionsManager.Instance.MovementInput.z);
+        if (isMoving)
+        {
+            rb.linearVelocity = new Vector3(InputActionsManager.Instance.MovementInput.x, rb.linearVelocity.y, InputActionsManager.Instance.MovementInput.z);
+        }
+        else
+        {
+            //Set the x and z to zero when not moving to prevent the character sliding when movement stops
+            //y is left the same so character doesn't get stuck mid air
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+        }
     }
 }

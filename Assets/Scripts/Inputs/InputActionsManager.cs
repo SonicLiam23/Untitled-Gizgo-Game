@@ -13,26 +13,26 @@ public class InputActionsManager
     private InputActionsManager()
     {
         InputActions = new InputSystem_Actions();
-        InputActions.Player.Enable();
+
         characterController = new();
     }
 
     public static void Init()
     {
-        if (Instance != null)
+ 
+        if (Instance == null)
         {
-            return;
+             Instance = new InputActionsManager();
         }
-
-        Instance = new InputActionsManager();
 
         Instance.characterController[CHARACTER.ELEPHANT] = GameManager.Instance.Elephant.GetComponent<CharacterControls>();
         Instance.characterController[CHARACTER.HUMAN] = GameManager.Instance.Human.GetComponent<CharacterControls>();
         Instance.characterController[CHARACTER.ELEPHANT].enabled = false;
         Instance.characterController[CHARACTER.HUMAN].enabled = true;
+        Instance.InputActions.Player.Enable();
         Instance.InputActions.Player.SetCallbacks(Instance.characterController[CHARACTER.HUMAN]);
-    }
 
+    }
     public void SwitchCharacter(CurrentCharacter character)
     {
         if (character.type == CHARACTER.ELEPHANT)

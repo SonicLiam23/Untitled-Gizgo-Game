@@ -1,22 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public enum BiomeType
-{
-    Path,
-    Cold,
-    Freezing
-}
-
-public enum AmountOfResources
-{
-    None,
-    VeryLow,
-    Low,
-    Medium,
-    High
-}
-
 [CreateAssetMenu(fileName = "BiomeTile", menuName = "Tiles/Biome Tile")]
 public class BiomeTile : Tile
 {

@@ -1,13 +1,9 @@
-using JetBrains.Annotations;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.VolumeComponent;
 
 public enum CHARACTER
 {
@@ -43,12 +39,24 @@ public class GameManager : MonoBehaviour
     private float hungerToReduce;
     private float speedChange;
     [SerializeField] private float CampfireTempIncrease;
-    [SerializeField] private MapManager mapManager;
+
     [SerializeField] private CameraAdjust camera;
     [SerializeField] private TimerScirpt dayNightTimer;
+    [SerializeField] private MapManager mapManager;
+
+    [SerializeField] private Image FreezingImg;
+    [SerializeField] private CanvasGroup DeathImgGroup;
+    [SerializeField] private GameObject humanControlUI;
+    [SerializeField] private GameObject elephantControlUI;
+
+
+
+    private BiomeSwapper swapper;
+
     private IEnumerator hungerCoroutine;
     private IEnumerator tempCoroutine;
     private bool inMinigame;
+    private bool inDeath;
 
     
 
@@ -63,7 +71,10 @@ public class GameManager : MonoBehaviour
 
 
         Instance = this;
-        characterCore = new();
+
+        characterStat = new();
+        characterTemp = new();
+        characterHunger = new();
         characterCore = new();
 
     }
@@ -91,15 +102,21 @@ public class GameManager : MonoBehaviour
         HoveringFoodSlider[(int)CHARACTER.ELEPHANT].maxValue = characterCore[CHARACTER.ELEPHANT].MaxHunger;
         HoveringTempSlider[(int)CHARACTER.ELEPHANT].maxValue = characterCore[CHARACTER.ELEPHANT].MaxTemp;
         characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
+        characterCore[OtherCharacter.type].SelectedArrowUI.enabled = false;
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
+        characterCore[ActiveCharacter.type].SelectedArrowUI.enabled = true;
 
-
+        swapper = GetComponent<BiomeSwapper>();
         InputActionsManager.Init();
 
         hungerCoroutine = HungerCoroutine();
         tempCoroutine = TempCoroutine();
 
         inMinigame = false;
+        inDeath = false;
+        
+        FreezingImg.enabled = false;
+        DeathScreenState(false);
 
         StartCoroutine(hungerCoroutine);
         StartCoroutine(tempCoroutine);
@@ -109,6 +126,11 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         HumanElephantDistance = Vector3.Distance(Human.transform.position, Elephant.transform.position);
+
+        if (characterTemp[ActiveCharacter.type] <= 0 && characterTemp[OtherCharacter.type] <= 0)
+        {
+            EnterDeathState();
+        }
     }
 
     private void FixedUpdate()
@@ -120,18 +142,28 @@ public class GameManager : MonoBehaviour
         HoveringFoodSlider[(int)OtherCharacter.type].value = characterCore[OtherCharacter.type].HungerValue;
         HoveringTempSlider[(int)OtherCharacter.type].value = characterCore[OtherCharacter.type].TempValue;
 
-        characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
-
-        //Checks current tile the player is on and changes the rate at which their temp and hunger are reduced based on the tile
-        BiomeTile tile = mapManager?.GetBiomeTileAtPosition(ActiveCharacter.gameObject.transform.position);
-
-        if(tile != null)
+        //if current character temp is at 30% or below from the total temp
+        if (characterTemp[ActiveCharacter.type] <= characterStat[ActiveCharacter.type].MaxTemperature * 30 / 100)
         {
-            tempToReduce = tile.TempRate;
-            hungerToReduce = tile.HungerRate;
-            characterCore[ActiveCharacter.type].Controls.ChangeInMovementSpeed = tile.PlayerSpeedChange; 
+            FreezingImg.enabled = true;
+        }
+        else
+        {
+            FreezingImg.enabled = false;
         }
 
+        characterCore[OtherCharacter.type].AgentController?.SetTarget(ActiveCharacter.gameObject);
+
+        BiomeConfig.BiomeEntry biome = swapper.CheckBiomeAtPos(ActiveCharacter.gameObject.transform.position);
+
+
+        if (biome != null)
+        {
+            tempToReduce = biome.TempRate;
+            hungerToReduce = biome.HungerRate;
+            characterCore[ActiveCharacter.type].Controls.ChangeInMovementSpeed = biome.PlayerSpeedIncrease;
+
+        }
 
     }
 
@@ -153,6 +185,9 @@ public class GameManager : MonoBehaviour
 
         characterCore[ActiveCharacter.type].AgentController.enabled = false;
 
+        // adding this in to swap the control scheme UI based on the active character
+        SwapControlUI();
+
         // temp whilst i fix the "switching pushes the character down a bit" bug (its to do with the navmesh agent)
         TEMP_fixNavmeshMovement();
 
@@ -164,8 +199,36 @@ public class GameManager : MonoBehaviour
         hungerSlider.maxValue = characterCore[ActiveCharacter.type].MaxHunger;
 
         characterCore[OtherCharacter.type].OverHeadUI.enabled = true;
+        characterCore[OtherCharacter.type].SelectedArrowUI.enabled = false;
         characterCore[ActiveCharacter.type].OverHeadUI.enabled = false;
-        
+        characterCore[ActiveCharacter.type].SelectedArrowUI.enabled = true;
+
+    }
+
+    public void EnterDeathState()
+    {
+        inDeath = true;
+        DeathScreenState(true);
+        StopCoroutine(hungerCoroutine);
+        StopCoroutine(tempCoroutine);
+        // disables the UI, jank asf i actually really hate this, but it works.
+        temperatureSlider.transform.parent.gameObject.SetActive(false);
+        HoveringFoodSlider[0].transform.parent.gameObject.SetActive(false);
+        HoveringFoodSlider[1].transform.parent.gameObject.SetActive(false);
+        dayNightTimer.SetTimePasses(false);
+
+    }
+
+    public void ExitDeathState()
+    {
+        inDeath = false;
+        DeathScreenState(false);
+
+        InputActionsManager.Instance.InputActions.Player.Disable();
+
+
+        SceneManager.LoadScene("MainMenu");
+        //return to main menu
     }
 
     public void EnterMinigame()
@@ -289,5 +352,35 @@ public class GameManager : MonoBehaviour
         Vector3 adjustment = new Vector3(0f, 0.2f, 0f);
         Elephant.transform.position += adjustment;
         Human.transform.position += adjustment;
+    }
+
+    // Handles swapping the UI that shows the different controls
+    private void SwapControlUI()
+    {
+        if(humanControlUI != null && elephantControlUI !=null)
+        {
+            CanvasGroup hGroup = humanControlUI.GetComponent<CanvasGroup>();
+            CanvasGroup eGroup = elephantControlUI.GetComponent<CanvasGroup>();
+
+            if (ActiveCharacter.type == CHARACTER.HUMAN)
+            {
+                hGroup.alpha = 1f;
+                eGroup.alpha = 0f;
+            }
+            else
+            {
+                hGroup.alpha = 0f;
+                eGroup.alpha = 1f;
+            }
+        }
+    }
+
+    // Handles showing/hiding the death screen
+    private void DeathScreenState(bool active)
+    {
+
+        DeathImgGroup.alpha = active ? 1f : 0f;
+        DeathImgGroup.blocksRaycasts = active;
+        DeathImgGroup.interactable = active;
     }
 }

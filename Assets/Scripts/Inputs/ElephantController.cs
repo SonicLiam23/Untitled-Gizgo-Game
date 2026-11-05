@@ -118,4 +118,32 @@ public class ElephantController : CharacterControls
         InputActionsManager.Instance.MovementInput = movement * transform.forward;
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Breakable"))
+        {
+            if (movement > baseMaxVelocity)
+            {
+                DestroyObject(collision.gameObject);
+            }
+        }
+    }
+
+    private void DestroyObject(GameObject objectToDestroy)
+    {
+        Destroy(objectToDestroy);
+    }
+
+
+    //Reset all variables so that velocity isn't retained when switching off and back on to the elephant
+    private void OnDisable()
+    {
+        movement = 0f;
+        currentRotation = 0f;
+        currentMaxVelocity = baseMaxVelocity;
+        currentVelocity = 0f;
+        boostSpeed = 0f;
+        forwardHeld = false;
+        backwardHeld = false;
+    }
 }

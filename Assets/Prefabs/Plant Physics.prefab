@@ -163,6 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84f3e0f6d852b314989a0d8ab6fde518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantInteract
+  UIAnimator: {fileID: 2602233179663541429}
+  sound: {fileID: 8300000, guid: 60ae0c62062b1ca4f9734b6d1e9d66b2, type: 3}
 --- !u!54 &2668653171215337615
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -204,7 +206,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2003260514069902575, guid: 56ca7756a07fcf94387175b854e17b23, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6499680712754110428, guid: 56ca7756a07fcf94387175b854e17b23, type: 3}
       propertyPath: Offset.y
@@ -257,8 +259,38 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2003260514069902575, guid: 56ca7756a07fcf94387175b854e17b23, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2602233179663541429}
   m_SourcePrefab: {fileID: 100100000, guid: 56ca7756a07fcf94387175b854e17b23, type: 3}
+--- !u!1 &4268186081646779274 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2003260514069902575, guid: 56ca7756a07fcf94387175b854e17b23, type: 3}
+  m_PrefabInstance: {fileID: 2375268864094203749}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &2602233179663541429
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4268186081646779274}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c760c6869ecd4c24bb83206c475b4c66, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!224 &4839962183068267329 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7195724728680242212, guid: 56ca7756a07fcf94387175b854e17b23, type: 3}

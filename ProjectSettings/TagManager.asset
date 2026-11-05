@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Campfire
+  - Breakable
   layers:
   - Default
   - TransparentFX
