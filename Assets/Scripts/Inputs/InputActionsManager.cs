@@ -19,10 +19,11 @@ public class InputActionsManager
 
     public static void Init()
     {
-        if (Instance != null)
-        {
-            return;
-        }
+        //commented this check out so it doesn't skip the rest of the init when changing scenes
+       // if (Instance != null)
+       //{
+       //     return;
+       //}
 
         Instance = new InputActionsManager();
 
@@ -31,8 +32,8 @@ public class InputActionsManager
         Instance.characterController[CHARACTER.ELEPHANT].enabled = false;
         Instance.characterController[CHARACTER.HUMAN].enabled = true;
         Instance.InputActions.Player.SetCallbacks(Instance.characterController[CHARACTER.HUMAN]);
-    }
 
+    }
     public void SwitchCharacter(CurrentCharacter character)
     {
         if (character.type == CHARACTER.ELEPHANT)
