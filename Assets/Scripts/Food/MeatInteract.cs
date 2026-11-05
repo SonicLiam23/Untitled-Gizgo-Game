@@ -4,7 +4,6 @@ public class MeatInteract : MonoBehaviour, IInteractable
 {
     [SerializeField] Animator UIAnimator;
     [SerializeField] AudioClip sound; //Sound when picked up
-    public float FoodRestored = 10f;
     [SerializeField] private float FoodRestored = 10f;
     public GameObject OnEnterRadius(Collider other)
     {
