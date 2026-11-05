@@ -71,10 +71,6 @@ public class GameManager : MonoBehaviour
 
 
         Instance = this;
-
-        characterStat = new();
-        characterTemp = new();
-        characterHunger = new();
         characterCore = new();
 
     }
@@ -126,11 +122,6 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         HumanElephantDistance = Vector3.Distance(Human.transform.position, Elephant.transform.position);
-
-        if (characterTemp[ActiveCharacter.type] <= 0 && characterTemp[OtherCharacter.type] <= 0)
-        {
-            EnterDeathState();
-        }
     }
 
     private void FixedUpdate()
@@ -143,7 +134,7 @@ public class GameManager : MonoBehaviour
         HoveringTempSlider[(int)OtherCharacter.type].value = characterCore[OtherCharacter.type].TempValue;
 
         //if current character temp is at 30% or below from the total temp
-        if (characterTemp[ActiveCharacter.type] <= characterStat[ActiveCharacter.type].MaxTemperature * 30 / 100)
+        if (characterCore[ActiveCharacter.type].TempValue <= characterCore[ActiveCharacter.type].MaxTemp * 30 / 100)
         {
             FreezingImg.enabled = true;
         }
@@ -163,6 +154,12 @@ public class GameManager : MonoBehaviour
             hungerToReduce = biome.HungerRate;
             characterCore[ActiveCharacter.type].Controls.ChangeInMovementSpeed = biome.PlayerSpeedIncrease;
 
+        }
+
+
+        if (characterCore[CHARACTER.ELEPHANT].TempValue <= 0 && characterCore[CHARACTER.HUMAN].TempValue <= 0)
+        {
+            EnterDeathState();
         }
 
     }
@@ -205,7 +202,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void EnterDeathState()
+    public void EnterDeathState() 
     {
         inDeath = true;
         DeathScreenState(true);

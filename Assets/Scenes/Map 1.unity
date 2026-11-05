@@ -1529,6 +1529,14 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8034877439461845822, guid: a19a0951a13c67341a4db70d5acdb103, type: 3}
+      propertyPath: maxTemp
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8034877439461845822, guid: a19a0951a13c67341a4db70d5acdb103, type: 3}
+      propertyPath: maxHunger
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 8034877439461845822, guid: a19a0951a13c67341a4db70d5acdb103, type: 3}
       propertyPath: overHeadUI
       value: 
       objectReference: {fileID: 1257281006}
@@ -1536,6 +1544,10 @@ PrefabInstance:
       propertyPath: selectedArrowUI
       value: 
       objectReference: {fileID: 1981840612}
+    - target: {fileID: 8034877439461845822, guid: a19a0951a13c67341a4db70d5acdb103, type: 3}
+      propertyPath: HeatLossGainEnabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8512276181627159003, guid: a19a0951a13c67341a4db70d5acdb103, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1649,10 +1661,10 @@ MonoBehaviour:
   MediumValue: 0.2
   HighValue: 0.5
   seed: 0
-  biomesConfig: {fileID: 11400000, guid: 7215614f64bd4fa479ef578643339e64, type: 2}
+  biomesConfig: {fileID: 0}
   itemConfig: {fileID: 11400000, guid: 66c8568aff11d0348b8f7087726d9837, type: 2}
   interactablesContainer: {fileID: 1247292158}
-  terrain: {fileID: 733261510}
+  terrain: {fileID: 0}
 --- !u!4 &633795281
 Transform:
   m_ObjectHideFlags: 0
@@ -1699,6 +1711,14 @@ PrefabInstance:
     - target: {fileID: 1916912038495346415, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3034940198859917027, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
+      propertyPath: maxTemp
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 3034940198859917027, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
+      propertyPath: maxHunger
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3034940198859917027, guid: a7efdd42519cf614f95e1329bd87dbd4, type: 3}
       propertyPath: overHeadUI
@@ -2639,7 +2659,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03517982433d03544a1cc3bc302f7e15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  audio: {fileID: 967758050}
 --- !u!4 &967758052
 Transform:
   m_ObjectHideFlags: 0
@@ -4333,6 +4352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39bc854c9a5b2048b5d786218d3252f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  CanSwitchOverride: 1
   CharacterObject:
   - {fileID: 649738925}
   - {fileID: 577094851}
@@ -4344,10 +4364,10 @@ MonoBehaviour:
   - {fileID: 577094853}
   temperatureSlider: {fileID: 1273053934}
   hungerSlider: {fileID: 1273053933}
-  CanSwitchOverride: 1
   CampfireTempIncrease: 5
   camera: {fileID: 1872214249}
   dayNightTimer: {fileID: 1758995105}
+  mapManager: {fileID: 633795280}
   FreezingImg: {fileID: 1251809868}
   DeathImgGroup: {fileID: 732094587}
   humanControlUI: {fileID: 1183536625}
