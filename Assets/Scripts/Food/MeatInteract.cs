@@ -4,7 +4,7 @@ public class MeatInteract : MonoBehaviour, IInteractable
 {
     [SerializeField] Animator UIAnimator;
     [SerializeField] AudioClip sound; //Sound when picked up
-    public float FoodRestored = 10f;
+    [SerializeField] private float FoodRestored = 10f;
     public GameObject OnEnterRadius(Collider other)
     {
         return other.gameObject;
@@ -19,7 +19,7 @@ public class MeatInteract : MonoBehaviour, IInteractable
     {
         if (GameManager.Instance.ActiveCharacter.type == CHARACTER.HUMAN)
         {
-            GameManager.Instance.RestoreHunger(FoodRestored);
+            GameManager.Instance.characterCore[CHARACTER.HUMAN].RestoreHunger(FoodRestored);
             ScoreManager.Instance.AddMeat();
             AudioManager.instance.PlaySound(sound);
             Destroy(gameObject);
