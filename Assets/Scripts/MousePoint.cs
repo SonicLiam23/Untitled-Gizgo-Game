@@ -12,15 +12,18 @@ public class MousePoint : MonoBehaviour
     private void Start()
     {
         pointTransform ??= transform;
-            //pointTransform = transform;
+        //pointTransform = transform;
 
         PlayerCamera ??= Camera.main;
-            //PlayerCamera = Camera.main;
+        //PlayerCamera = Camera.main;
 
     }
 
     private void Update()
     {
+        if (InputActionsManager.Instance == null || !InputActionsManager.Instance.MousePoint)
+            return;
+
         Mouse mouse = Mouse.current;
 
         if (mouse == null || PlayerCamera == null)

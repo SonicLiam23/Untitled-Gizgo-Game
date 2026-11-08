@@ -9,6 +9,7 @@ public class InputActionsManager : MonoBehaviour
     [HideInInspector] public Dictionary<CHARACTER, CharacterControls> characterController;
     public InputSystem_Actions InputActions { get; private set; }
     public Vector3 MovementInput;
+    public bool MousePoint = false;
 
     private void Awake()
     {
@@ -39,14 +40,14 @@ public class InputActionsManager : MonoBehaviour
         {
             characterController[CHARACTER.HUMAN].enabled = false;
             characterController[CHARACTER.ELEPHANT].enabled = true;
-
+            MousePoint = true;
             InputActions.Player.SetCallbacks(characterController[CHARACTER.ELEPHANT]);
         }
         else
         {
             characterController[CHARACTER.HUMAN].enabled = true;
             characterController[CHARACTER.ELEPHANT].enabled = false;
-
+            MousePoint = false;
             InputActions.Player.SetCallbacks(characterController[CHARACTER.HUMAN]);
         }
     }
