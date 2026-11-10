@@ -13,7 +13,7 @@ public class ElephantController : CharacterControls
     [SerializeField] private float maxVelocityCap = 10f;   // absolute cap for max velocity after shift taps
     [SerializeField] private float sprintStep = 2f;        // amount added to max velocity per shift tap
     [SerializeField] private float acceleration = 3f;      // units per second when holding forward
-    [SerializeField] private float deceleration = 4f;      // units per second when releasing forward
+    [SerializeField] private float deceleration = 8f;      // units per second when releasing forward
     [SerializeField] private float boostStep = 2f;    // amount added per press
     [SerializeField] private float maxBoost = 8f;    // max absolute boost
     [SerializeField] private float decayRate = 2f;    // units per second (1 => 5 units decays in 5s)
@@ -83,8 +83,18 @@ public class ElephantController : CharacterControls
         }
         else if (backwardHeld)
         {
-            // target is negative reverse max
-            currentVelocity = Mathf.MoveTowards(currentVelocity, -reverseMaxVelocity, acceleration * Time.deltaTime);
+            if (currentVelocity > 0f)
+            {
+                // Stop forward movement before reversing
+                currentVelocity = Mathf.MoveTowards(
+                    currentVelocity, 0f,(2* deceleration) * Time.deltaTime);
+            }
+            else
+            {
+                // Now accelerate in reverse
+                currentVelocity = Mathf.MoveTowards(
+                    currentVelocity, -reverseMaxVelocity, acceleration * Time.deltaTime);
+            }
         }
         else
         {
