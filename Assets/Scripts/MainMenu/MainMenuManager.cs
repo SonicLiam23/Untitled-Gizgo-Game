@@ -6,6 +6,8 @@ public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] AudioSource audioSource;
 
+    bool hasPressedPlay = false;
+
     //Simple switch to another scene
     public void SwitchScene(string scene)
     {
@@ -21,7 +23,14 @@ public class MainMenuManager : MonoBehaviour
     //Play sound and wait before switching scene
     public void SwitchSceneSound(string scene)
     {
+        if(hasPressedPlay)
+        {
+            audioSource.Stop();
+            return;
+        }
+
         StartCoroutine(WaitForSound(scene));
+        hasPressedPlay = true;
         
     }
 

@@ -149,7 +149,7 @@ public class MapManager : MonoBehaviour
 
                     ItemsConfig.ItemEntry foodItem = itemConfig.GetItem(itemType);
                     GameObject foodObject = foodItem.Prefab;
-                    GameObject foodInstance = Instantiate(foodObject, Pos + Vector3.up, Quaternion.identity);
+                    GameObject foodInstance = Instantiate(foodObject, new Vector3(Pos.x, Pos.y + 0.5f, Pos.z), Quaternion.identity);
 
                     foodInstance.name = string.Format("foodObj_x{0}_z{1}", Pos.x, Pos.z);
                     foodInstance.transform.SetParent(interactablesContainer, false);
@@ -161,7 +161,7 @@ public class MapManager : MonoBehaviour
                 {
                     ItemsConfig.ItemEntry stickItem = itemConfig.GetItem(ItemType.Stick);
                     GameObject stickObject = stickItem.Prefab;
-                    GameObject stickInstance = Instantiate(stickObject, Pos + Vector3.up, Quaternion.identity);
+                    GameObject stickInstance = Instantiate(stickObject, new Vector3(Pos.x, Pos.y + 0.5f, Pos.z), Quaternion.identity);
 
                     stickInstance.name = string.Format("stickObj_x{0}_z{1}", Pos.x, Pos.z);
                     stickInstance.transform.SetParent(interactablesContainer, false);
@@ -173,7 +173,7 @@ public class MapManager : MonoBehaviour
                 {
                     ItemsConfig.ItemEntry campfireItem = itemConfig.GetItem(ItemType.Campfire);
                     GameObject campfireObject = campfireItem.Prefab;
-                    GameObject campfireInstance = Instantiate(campfireObject, Pos + Vector3.up, Quaternion.identity);
+                    GameObject campfireInstance = Instantiate(campfireObject, new Vector3(Pos.x, Pos.y + 0.5f, Pos.z), Quaternion.identity);
 
                     campfireInstance.name = string.Format("campfireObj_x{0}_z{1}", Pos.x, Pos.z);
                     campfireInstance.transform.SetParent(interactablesContainer, false);
@@ -185,7 +185,7 @@ public class MapManager : MonoBehaviour
                 {
                     ItemsConfig.ItemEntry treeItem = itemConfig.GetItem(ItemType.Tree);
                     GameObject treeObject = treeItem.Prefab;
-                    GameObject treeInstance = Instantiate(treeObject, Pos + Vector3.up, Quaternion.identity);
+                    GameObject treeInstance = Instantiate(treeObject, new Vector3(Pos.x, Pos.y + 0.5f, Pos.z), Quaternion.identity);
 
                     treeInstance.name = string.Format("treeObj_x{0}_z{1}", Pos.x, Pos.z);
                     treeInstance.transform.SetParent(interactablesContainer, false);
