@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc6e979f65c461041ac2d3a7f84b2832, type: 3}
+  m_Name: C1
+  m_EditorClassIdentifier: Assembly-CSharp::CollectibleDisplay
+  display:
+    name: Frozen Skeleton
+    description: "Hanno died as he tried to swim across an icy lake. The shards of
+      ice were too thick, freezing too quick, and therefore he couldn\u2019t keep
+      up. He drowned, his handler fortunately surviving off the back of him. "
+    displayObject: {fileID: 6582097629322115208, guid: a5bb45e222a9fb646ae2972dc71d3abc, type: 3}

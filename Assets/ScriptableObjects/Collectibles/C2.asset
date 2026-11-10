@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc6e979f65c461041ac2d3a7f84b2832, type: 3}
+  m_Name: C2
+  m_EditorClassIdentifier: Assembly-CSharp::CollectibleDisplay
+  display:
+    name: Damaged Skeleton
+    description: Mago died as a result of a violent encounter with a tribe. Whilst
+      he trampled over most, his injuries caused him to slow as he bled out alone
+      on the battlefield.
+    displayObject: {fileID: 6582097629322115208, guid: ade797337fb7241478cc4c12a8355d12, type: 3}
