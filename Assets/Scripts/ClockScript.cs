@@ -10,6 +10,6 @@ public class ClockScript : MonoBehaviour
     }
     private void Update()
     {
-        clockHandTransform.eulerAngles = new Vector3(0, 0, -Time.time * 2f); // Rotate the clock hand based on time
+        clockHandTransform.eulerAngles = new Vector3(0, 0, -Time.time * 1.8f); // Rotate the clock hand based on time
     }
 }
