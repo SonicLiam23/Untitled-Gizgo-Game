@@ -48,8 +48,8 @@ public class TimerScirpt : MonoBehaviour
     void Update()
     {
 
-        timeRemaining -= Time.deltaTime;
-        timerText.text = "Time Remaining: " + Mathf.Round(timeRemaining).ToString();
+        //timeRemaining -= Time.deltaTime;
+        //timerText.text = "Time Remaining: " + Mathf.Round(timeRemaining).ToString();
         
         //Get the progress of time from the duration of the current state and how long its left from it and give the time slider its value
         float timeProgress = 1f -  (timeRemaining/stateDuration);
@@ -58,7 +58,7 @@ public class TimerScirpt : MonoBehaviour
         if (timeRemaining <= 0)
         {
             timeRemaining = 0;
-            timerText.text = "Time's Up!";
+            //timerText.text = "Time's Up!";
 
             timerEnded();
         }

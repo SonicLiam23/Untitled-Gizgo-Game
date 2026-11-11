@@ -55,10 +55,16 @@ public class CampfireInteract : MonoBehaviour, IInteractable
             UIAnimator.SetTrigger("Accept"); //Makes the UI Disappear with the animation (sets scale to 0)
             isLit = true;
 
-            if(interacter.TryGetComponent<CharacterCore>(out CharacterCore player))
+            /*if(interacter.TryGetComponent<CharacterCore>(out CharacterCore player)) //This doesn't account for if the other character is in the radius
             {
                 player.InLitCampfireRadius = true;
-            }
+            }*/
+
+            //Just enables and disables the collider to 'refresh' it
+            Collider collider = GetComponent<Collider>();
+            collider.enabled = false;
+            collider.enabled = true;
+
         }
 
         //Play UI animation if trying to interact as elephant

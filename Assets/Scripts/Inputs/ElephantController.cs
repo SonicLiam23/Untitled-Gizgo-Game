@@ -17,6 +17,7 @@ public class ElephantController : CharacterControls
     [SerializeField] private float boostStep = 2f;    // amount added per press
     [SerializeField] private float maxBoost = 8f;    // max absolute boost
     [SerializeField] private float decayRate = 2f;    // units per second (1 => 5 units decays in 5s)
+    [SerializeField] private AudioClip smashSound;
     private float boostSpeed = 0f;                    // current extra speed (+ forward, - reverse)
 
     private float currentMaxVelocity; // current target max (starts at baseMaxVelocity)
@@ -135,6 +136,7 @@ public class ElephantController : CharacterControls
             if (movement > baseMaxVelocity)
             {
                 DestroyObject(collision.gameObject);
+                AudioManager.instance.PlaySound(smashSound);
             }
         }
     }
