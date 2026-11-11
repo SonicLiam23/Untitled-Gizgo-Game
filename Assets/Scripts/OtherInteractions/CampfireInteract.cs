@@ -67,6 +67,11 @@ public class CampfireInteract : MonoBehaviour, IInteractable
 
         }
 
+        if (!isLit && ScoreManager.Instance.GetSticks() < sticksToLight && GameManager.Instance.ActiveCharacter.type == CHARACTER.HUMAN)
+        {
+            UIAnimator.SetTrigger("Reject");
+        }
+
         //Play UI animation if trying to interact as elephant
         if (!isLit && GameManager.Instance.ActiveCharacter.type == CHARACTER.ELEPHANT)
         {
